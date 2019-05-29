@@ -9,28 +9,45 @@ import pl.michalboryczko.exercise.R
 import pl.michalboryczko.exercise.app.BaseActivity
 import pl.michalboryczko.exercise.model.base.Status
 
-class SessionActivity : BaseActivity<SessionViewModel>() {
+
+interface OnSessionListener{
+    fun joinSession()
+    fun createSession()
+}
+
+class SessionActivity : BaseActivity<SessionViewModel>(), OnSessionListener {
+
+    private val sessionDialog = SessionDialog(this, this)
 
     companion object {
         fun prepareIntent(activity: Activity) = Intent(activity, SessionActivity::class.java)
+    }
+
+    private fun openSessionCreateDialog(){
+        sessionDialog.showCreateSessionDialog()
+    }
+
+    private fun openSessionJoinDialog(){
+        sessionDialog.showJoinSessionDialog()
+    }
+
+    override fun joinSession() {
+        val data = sessionDialog.getSessionData()
+        viewModel.joinSession(data.sessionId, data.password)
+    }
+
+    override fun createSession() {
+        val data = sessionDialog.getSessionData()
+        viewModel.createSession(data.sessionId, data.password)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_session)
 
-        createSessionButton.setOnClickListener {
-            viewModel.createSession(sessionNameEditText.text.toString(), sessionPassword.text.toString())
-        }
-
-        joinSessionButton.setOnClickListener {
-            viewModel.joinSession(joinSessionIdText.text.toString(), joinSessionPassword.text.toString())
-        }
-
-        logoutButton.setOnClickListener {
-            viewModel.logout()
-        }
-
+        createSessionMenuButton.setOnClickListener { openSessionCreateDialog() }
+        joinSessionMenuButton.setOnClickListener { openSessionJoinDialog() }
+        logoutMenuButton.setOnClickListener { viewModel.logout() }
         observeUserLoginStatus()
 
         viewModel.session.observe(this, Observer {
@@ -38,8 +55,8 @@ class SessionActivity : BaseActivity<SessionViewModel>() {
                 when(r.status){
                     Status.INITIAL -> initial()
                     Status.LOADING -> showLoading()
-                    Status.ERROR -> {hideViews(progressBar)}
-                    Status.ERROR_ID -> {hideViews(progressBar)}
+                    Status.ERROR -> {showError()}
+                    Status.ERROR_ID -> {showError()}
                     Status.SUCCESS -> {
                         val session = r.data
                         if(session != null){
@@ -52,13 +69,17 @@ class SessionActivity : BaseActivity<SessionViewModel>() {
     }
 
     fun initial(){
-        enableViews(createSessionButton, joinSessionButton)
+        enableViews(createSessionMenuButton, joinSessionMenuButton)
         hideViews(progressBar)
     }
 
     fun showLoading(){
-        disableViews(createSessionButton, joinSessionButton)
+       // disableViews(createSessionMenuButton, joinSessionMenuButton)
         showViews(progressBar)
+    }
+
+    fun showError(){
+        hideViews(progressBar)
     }
 
     override fun initViewModel() {

@@ -9,11 +9,17 @@
     <string name="noInternetConnectionError">No internet connection.\n Click to retry.</string>
     <string name="unknownError">Error occurred.\n Please retry.</string>
 
+    <!--basics-->
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+
 
     <!--menu-->
     <string name="login_button">Login</string>
     <string name="create_session">Create session</string>
     <string name="join_session">Join session</string>
+    <string name="session_id">Session id</string>
+    <string name="session_password">Session password</string>
 
 
     <!--errors -->
