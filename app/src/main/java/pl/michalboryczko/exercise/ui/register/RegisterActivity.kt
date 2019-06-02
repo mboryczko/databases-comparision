@@ -56,6 +56,10 @@ class RegisterActivity : BaseActivity<RegisterViewModel>() {
         hideViews()
     }
 
+    override fun defaultErrorHandling(res: Int) {
+        showError(res)
+    }
+
     private fun showError(errorMsg: String){
         showViews()
         hideViews(progressBar)

@@ -12,6 +12,8 @@ import pl.michalboryczko.exercise.ui.session.SessionActivity
 import pl.michalboryczko.exercise.ui.session.SessionViewModel
 import pl.michalboryczko.exercise.ui.login.LoginActivity
 import pl.michalboryczko.exercise.ui.login.LoginViewModel
+import pl.michalboryczko.exercise.ui.mysessions.MySessionsActivity
+import pl.michalboryczko.exercise.ui.mysessions.MySessionsViewModel
 import pl.michalboryczko.exercise.ui.register.RegisterActivity
 import pl.michalboryczko.exercise.ui.register.RegisterViewModel
 
@@ -32,6 +34,14 @@ internal abstract class ActivityModule {
     internal abstract fun bindActiveSessionActivity(): ActiveSessionActivity
 
 
+    @ContributesAndroidInjector
+    internal abstract fun bindMySessionsActivity(): MySessionsActivity
+
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MySessionsViewModel::class)
+    abstract fun bindMySessionsViewModel(viewModel: MySessionsViewModel): ViewModel
 
     @Binds
     @IntoMap

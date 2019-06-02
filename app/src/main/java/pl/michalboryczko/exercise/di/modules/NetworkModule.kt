@@ -1,6 +1,9 @@
 package pl.michalboryczko.exercise.di.modules
 
 import android.content.Context
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -84,8 +87,14 @@ class NetworkModule {
     }
 
     @Provides
-    fun firestoreService(): FirestoreApiService {
-        return FirestoreApiService()
+    fun provideFirestoreApiService(): FirestoreApiService {
+        val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
+        val db: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
+        val settings = FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(false)
+                .build()
+        db.firestoreSettings = settings
+        return FirestoreApiService(auth, db)
     }
 
 }

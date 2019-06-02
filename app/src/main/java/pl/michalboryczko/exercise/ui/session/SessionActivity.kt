@@ -37,8 +37,12 @@ class SessionActivity : BaseActivity<SessionViewModel>(), OnSessionListener {
     }
 
     override fun createSession() {
-        val data = sessionDialog.getSessionData()
-        viewModel.createSession(data.sessionId, data.password)
+        val data = sessionDialog.getSessionCreateData()
+        viewModel.createSession(data.sessionId, data.password, data.options)
+    }
+
+    override fun defaultErrorHandling(res: Int) {
+        showError()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +52,7 @@ class SessionActivity : BaseActivity<SessionViewModel>(), OnSessionListener {
         createSessionMenuButton.setOnClickListener { openSessionCreateDialog() }
         joinSessionMenuButton.setOnClickListener { openSessionJoinDialog() }
         logoutMenuButton.setOnClickListener { viewModel.logout() }
+        mySessionsMenuButton.setOnClickListener { navigator.navigateToMySessionsActivity(this) }
         observeUserLoginStatus()
 
         viewModel.session.observe(this, Observer {

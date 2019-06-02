@@ -7,10 +7,7 @@ import io.reactivex.disposables.Disposable
 import pl.michalboryczko.exercise.R
 import pl.michalboryczko.exercise.model.base.Event
 import pl.michalboryczko.exercise.model.base.Resource
-import pl.michalboryczko.exercise.model.exceptions.ApiException
-import pl.michalboryczko.exercise.model.exceptions.NoInternetException
-import pl.michalboryczko.exercise.model.exceptions.UnathorizedException
-import pl.michalboryczko.exercise.model.exceptions.WrongPasswordException
+import pl.michalboryczko.exercise.model.exceptions.*
 import pl.michalboryczko.exercise.source.api.InternetConnectivityChecker
 import pl.michalboryczko.exercise.source.repository.UserRepository
 import timber.log.Timber
@@ -25,6 +22,7 @@ abstract class BaseViewModel(
     val toastInfoResource: MutableLiveData<Event<Int>> = MutableLiveData()
     protected val disposables :MutableList<Disposable> = mutableListOf()
     val internetConnectivity: MutableLiveData<Boolean> = MutableLiveData()
+    val error: MutableLiveData<Event<Int>> = MutableLiveData()
 
     init {
         disposables.add(
@@ -44,6 +42,8 @@ abstract class BaseViewModel(
     }
 
 
+
+
     fun defaultErrorHandling(throwable: Throwable){
         Timber.d("default error: %s", throwable.message)
         Timber.d("default error: %s", throwable.toString())
@@ -55,6 +55,10 @@ abstract class BaseViewModel(
             }
             is WrongPasswordException -> toastInfoResource.value = Event(R.string.wrong_password)
             is ApiException -> toastInfo.value = Event(throwable.errorMsg)
+            is NotFoundException -> {
+                toastInfo.value = Event("Not found")
+                error.value = Event(R.string.not_found)
+            }
             else -> toastInfo.value = Event(throwable.localizedMessage)
         }
     }

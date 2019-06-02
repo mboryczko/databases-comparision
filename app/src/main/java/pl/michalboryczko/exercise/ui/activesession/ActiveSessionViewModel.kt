@@ -11,6 +11,7 @@ import pl.michalboryczko.exercise.model.base.Event
 import pl.michalboryczko.exercise.model.base.Resource
 import pl.michalboryczko.exercise.model.exceptions.NoInternetException
 import pl.michalboryczko.exercise.model.exceptions.ApiException
+import pl.michalboryczko.exercise.model.presentation.ChatMessage
 import pl.michalboryczko.exercise.source.api.InternetConnectivityChecker
 import pl.michalboryczko.exercise.source.repository.Repository
 import pl.michalboryczko.exercise.source.repository.UserRepository
@@ -29,7 +30,7 @@ class ActiveSessionViewModel
 
     val session: MutableLiveData<Resource<ActiveSession>> = MutableLiveData()
     val story: MutableLiveData<Resource<Story>> = MutableLiveData()
-
+    val stories: MutableLiveData<Resource<List<Story>>> = MutableLiveData()
 
     fun initialize(sessionProvided: Session) {
         disposables.add(
@@ -40,8 +41,27 @@ class ActiveSessionViewModel
                                     val activeSession = ActiveSession(sessionProvided.managerId == uid, sessionProvided)
                                     session.value = Resource.success(activeSession)
                                     observeCurrentStory(sessionProvided.sessionId)
+                                    observeStories(sessionProvided.sessionId)
                                 },
                                 {defaultErrorHandling(it)}
+                        )
+        )
+    }
+
+    fun observeStories(sessionId: String){
+        disposables.add(
+                repository
+                        .observeStories(sessionId)
+                        .subscribeOn(computationScheduler)
+                        .observeOn(mainScheduler)
+                        .doOnSubscribe { stories.value = Resource.loading() }
+                        .subscribe(
+                                {
+                                    stories.value = Resource.success(it)
+                                },
+                                {
+                                    defaultErrorHandling(it)
+                                }
                         )
         )
     }
@@ -64,24 +84,46 @@ class ActiveSessionViewModel
         )
     }
 
-    fun createStory(story: String, description: String){
-        val sessionId = session.value!!.data!!.session.sessionId
-        disposables.add(
-                repository
-                        .createStory(sessionId, story, description)
-                        .subscribeOn(computationScheduler)
-                        .observeOn(mainScheduler)
-                        .subscribe(
-                                {
-                                    toastInfo.value = Event("story created")
-                                },
-                                {defaultErrorHandling(it)}
-                        )
+    fun storyClicked(story: Story){
+        val isMaster = session.value?.data?.isMaster
+        if(isMaster != null && isMaster){
+            disposables.add(
+                    repository
+                            .updateCurrentStoryUnderSession(story)
+                            .subscribeOn(computationScheduler)
+                            .observeOn(mainScheduler)
+                            .subscribe(
+                                    {
+                                        toastInfo.value = Event("story switched")
+                                    },
+                                    {defaultErrorHandling(it)}
+                            )
 
-        )
+            )
+        }
+
     }
 
-    fun saveEstimationClicked(points: Int){
+    fun createStory(story: String, description: String){
+        val sessionId = session.value?.data?.session?.sessionId
+        if(sessionId != null){
+            disposables.add(
+                    repository
+                            .createStory(sessionId, story, description)
+                            .subscribeOn(computationScheduler)
+                            .observeOn(mainScheduler)
+                            .subscribe(
+                                    {
+                                        toastInfo.value = Event("story created")
+                                    },
+                                    {defaultErrorHandling(it)}
+                            )
+
+            )
+        }
+    }
+
+    fun saveEstimationClicked(points: String){
         val storyId = story.value?.data?.storyId
         if(storyId != null){
             disposables.add(

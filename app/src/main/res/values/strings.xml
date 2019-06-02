@@ -13,6 +13,12 @@
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
 
+    <string-array name="estimation_options">
+        <item>1, 2, 4, 8, 16, 32, 64</item>
+        <item>1, 2, 3, 5, 8, 13, 20, 40</item>
+
+    </string-array>
+
 
     <!--menu-->
     <string name="login_button">Login</string>
@@ -22,9 +28,15 @@
     <string name="session_password">Session password</string>
 
 
+    <!--session-->
+    <string name="stories">Stories for this session: </string>
+    <string name="estimations">Estimations for this story: </string>
+
+
     <!--errors -->
     <string name="unknown_error">Unexpected error has occurred</string>
     <string name="no_internet">No internet connected</string>
+    <string name="not_found">Not found</string>
     <string name="unathorized_error">Session ended</string>
     <string name="wrong_password">Wrong password</string>
 
@@ -47,4 +59,7 @@
     <string name="login_successful">Logged in successfully</string>
     <string name="register_prompt">Don\'t have an account? </string>
     <string name="register_here">Register here.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

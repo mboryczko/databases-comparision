@@ -8,7 +8,9 @@ data class Session(
         val managerId: String = "",
         val name: String = "",
         val password: String = "",
-        val currentStory: String? = null
+        //todo to be removed
+        val currentStory: String? = null,
+        val options: List<String>? = null
 ): Serializable
 
 data class Story(
@@ -24,9 +26,9 @@ data class Story(
 
 data class Estimation(
         val storyId: String,
-        val points: Int,
+        val points: String,
         val username: String,
         val userId: String
 ){
-    constructor(): this("", -1,  "", "")
+    constructor(): this("", "",  "", "")
 }

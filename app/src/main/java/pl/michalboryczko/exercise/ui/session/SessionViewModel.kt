@@ -42,6 +42,12 @@ class SessionViewModel
         session.value = Resource.initial()
     }
 
+    fun mySessions(){
+
+    }
+
+
+
     fun joinSession(sessionId: String, password: String) {
         disposables.add(
                 repository
@@ -59,10 +65,10 @@ class SessionViewModel
         )
     }
 
-    fun createSession(name: String, password: String) {
+    fun createSession(name: String, password: String, estimationOptions: List<String>) {
         disposables.add(
                 repository
-                        .createSession(name, password)
+                        .createSession(name, password, estimationOptions)
                         .subscribeOn(computationScheduler)
                         .observeOn(mainScheduler)
                         .doOnSubscribe { session.value = Resource.loading() }

@@ -7,6 +7,7 @@ import pl.michalboryczko.exercise.di.modules.NetworkModule
 import pl.michalboryczko.exercise.app.MainApplication
 import pl.michalboryczko.exercise.di.modules.InteractorModule
 import pl.michalboryczko.exercise.di.modules.ActivityModule
+import pl.michalboryczko.exercise.di.modules.FragmentModule
 import javax.inject.Singleton
 
 
@@ -18,6 +19,7 @@ import javax.inject.Singleton
                 NetworkModule::class,
                 ViewModelBuilder::class,
                 ActivityModule::class,
+                FragmentModule::class,
                 InteractorModule::class
         ))
 interface AppComponent : AndroidInjector<MainApplication> {

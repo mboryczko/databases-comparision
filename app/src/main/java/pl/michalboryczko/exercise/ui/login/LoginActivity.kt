@@ -21,7 +21,7 @@ class LoginActivity : BaseActivity<LoginViewModel>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        emailEditText.setText("a@b.pl")
+        emailEditText.setText("a@a.pl")
         passwordEditText.setText("testtest1")
 
         loginButton.setOnClickListener { viewModel.loginClicked(
@@ -45,6 +45,10 @@ class LoginActivity : BaseActivity<LoginViewModel>() {
                 }
             }
         })
+    }
+
+    override fun defaultErrorHandling(res: Int) {
+        showError(res)
     }
 
     private fun showInitial(){

@@ -2,11 +2,10 @@ package pl.michalboryczko.exercise.source.api.firebase
 
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.EventListener
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
 import io.reactivex.*
+import io.reactivex.Observable
+import org.intellij.lang.annotations.Flow
 import pl.michalboryczko.exercise.model.api.Estimation
 import javax.inject.Singleton
 import java.lang.Exception
@@ -16,22 +15,36 @@ import pl.michalboryczko.exercise.model.api.call.LoginCall
 import pl.michalboryczko.exercise.model.api.call.UserCall
 import pl.michalboryczko.exercise.model.exceptions.NotFoundException
 import pl.michalboryczko.exercise.model.exceptions.WrongPasswordException
+import pl.michalboryczko.exercise.model.presentation.ChatMessage
+import pl.michalboryczko.exercise.model.presentation.Message
+import pl.michalboryczko.exercise.model.presentation.User
 import timber.log.Timber
+import java.util.*
+import com.google.firebase.firestore.FirebaseFirestoreSettings
+
+
 
 
 @Singleton
-class FirestoreApiService {
-
-    private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
-    private val db: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
-
+class FirestoreApiService(
+        val auth: FirebaseAuth,
+        val db: FirebaseFirestore
+) {
     private val SESSIONS = "sessions"
+    private val MANAGER_ID = "managerId"
     private val CURRENT_STORY = "currentStory"
     private val STORIES = "stories"
+    private val MESSAGES = "messages"
     private val SESSION_ID = "sessionId"
     private val STORY_ID = "storyId"
+    private val TIME = "time"
 
     fun logIn(input: LoginCall): Single<Boolean> {
+        val settings = FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(true)
+                .build()
+        db.firestoreSettings = settings
+
         return Single
                 .create { emitter ->
                     auth.signInWithEmailAndPassword(input.email, input.password)
@@ -80,16 +93,45 @@ class FirestoreApiService {
     }
 
     //save Session object AT sessionId node
-    fun createSession(managerId:String, name: String, password: String): Single<Session> {
-        //val sessionId = db.collection(SESSIONS).document().id
+    fun createSession(managerId:String, name: String, password: String, estimationOptions: List<String>): Single<Session> {
         val sessionId = name
-        val session = Session(sessionId, managerId, name, password, null)
+        val session = Session(sessionId, managerId, name, password, null, estimationOptions)
         return Single
                 .create { emitter ->
                     db.collection(SESSIONS)
                             .document(sessionId)
                             .set(session)
                             .addOnSuccessListener { emitter.onSuccess(session) }
+                            .addOnFailureListener{ emitter.onError(it)}
+                }
+    }
+
+    fun observeChatMessages(sessionId: String): Observable<List<ChatMessage>> {
+        return Observable.create{ emitter ->
+            db.collection(MESSAGES)
+                    .whereEqualTo(SESSION_ID, sessionId)
+                    .orderBy(TIME)
+                    .addSnapshotListener { value, e ->
+                        if (e != null) {
+                            emitter.onError(e)
+                        }
+
+                        if(value != null){
+                            val m = value.toObjects(ChatMessage::class.java)
+                            emitter.onNext(m)
+                        }
+                    }
+        }
+    }
+
+    fun addMessage(sessionId: String, user: User, message: String): Single<Boolean>{
+        val chatMessage = Message(user.username, message, Date().toString(), user.id, sessionId)
+        return Single
+                .create { emitter ->
+                    db.collection(MESSAGES)
+                            .document()
+                            .set(chatMessage)
+                            .addOnSuccessListener { emitter.onSuccess(true) }
                             .addOnFailureListener{ emitter.onError(it)}
                 }
     }
@@ -160,6 +202,21 @@ class FirestoreApiService {
                             .addOnSuccessListener { emitter.onSuccess(story) }
                             .addOnFailureListener{ emitter.onError(it)}
                 }
+    }
+
+    fun getUserSessions(uid: String): Single<List<Session>>{
+        return Single.create { emitter ->
+            db.collection(SESSIONS)
+                    .whereEqualTo(MANAGER_ID, uid)
+                    .addSnapshotListener{ value, e ->
+                        if (e != null) {
+                            emitter.onError(e)
+                        }
+
+                        val sessions = value!!.toObjects(Session::class.java)
+                        emitter.onSuccess(sessions)
+                    }
+        }
     }
 
     fun setEstimation(estimation: Estimation): Single<Boolean>{

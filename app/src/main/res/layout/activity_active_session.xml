@@ -1,136 +1,26 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<?xml version = "1.0" encoding = "utf-8"?>
+<RelativeLayout
+    xmlns:android = "http://schemas.android.com/apk/res/android"
+    xmlns:app = "http://schemas.android.com/apk/res-auto"
+    android:layout_width = "match_parent"
+    android:layout_height = "match_parent">
 
-    <LinearLayout
+    <com.google.android.material.tabs.TabLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/tabs"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/activeSession"
-            android:textSize="16sp"
-            android:text="active session title"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/activeStory"
-            android:textSize="16sp"
-            android:text="active story title"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/activeStoryDescription"
-            android:textSize="16sp"
-            android:text="active story description"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/estimationsRecyclerView"
-            tools:listitem="@layout/estimation_item"
-            android:layout_width="match_parent"
-            android:layout_height="200dp" />
-
-        <LinearLayout
-            android:id="@+id/createStoryLayout"
-            android:padding="16dp"
-            android:layout_margin="8dp"
-            android:background="@color/color4"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:textColorHint="@color/colorAccent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/createStoryName"
-                    android:hint="story name"
-                    android:textColor="@color/white"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:textColorHint="@color/colorAccent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/createStoryDescription"
-                    android:textColor="@color/white"
-                    android:hint="story description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <Button
-                android:id="@+id/createStoryButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="CREATE STORY" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/createEstmationLayout"
-            android:padding="16dp"
-            android:layout_margin="8dp"
-            android:background="@color/color4"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:textColorHint="@color/colorAccent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/pointsEstimation"
-                    android:textColor="@color/white"
-                    android:hint="points estimation"
-                    android:inputType="numberDecimal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <Button
-                android:id="@+id/saveEstimationButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="SAVE ESTIMATION" />
-
-        </LinearLayout>
+        android:layout_height="wrap_content"
+        android:background="?attr/colorAccent"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:tabIndicatorColor="@android:color/white"
+        app:tabIndicatorHeight="4dp"/>
 
 
 
-        <Button
-            android:layout_margin="8dp"
-            android:id="@+id/logoutButton"
-            android:text="LOGOUT"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-
-
-    </LinearLayout>
-
-</androidx.core.widget.NestedScrollView>
+    <androidx.viewpager.widget.ViewPager
+        android:id = "@+id/viewpager"
+        android:layout_below="@+id/tabs"
+        android:layout_width = "match_parent"
+        android:layout_height = "match_parent" />
+</RelativeLayout>

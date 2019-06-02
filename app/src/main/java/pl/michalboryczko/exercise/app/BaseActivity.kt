@@ -31,9 +31,11 @@ abstract class BaseActivity<T: BaseViewModel>  : DaggerAppCompatActivity() {
         initViewModel()
         lifecycle.addObserver(viewModel)
         observeToastMessage()
+        observeDefaultError()
     }
 
     abstract fun initViewModel()
+    abstract fun defaultErrorHandling(res: Int)
 
     fun observeUserLoginStatus(){
         viewModel.loggedInStatus.observe(this, Observer {
@@ -43,6 +45,18 @@ abstract class BaseActivity<T: BaseViewModel>  : DaggerAppCompatActivity() {
                 }
             }
         })
+    }
+
+    fun observeDefaultError(){
+        viewModel.error.observe(this, Observer {
+            it?.let { msg ->
+                val res = msg.getContentIfNotHandled()
+                if(res != null)
+                    defaultErrorHandling(res)
+
+            }
+        })
+
     }
 
     fun observeToastMessage(){
