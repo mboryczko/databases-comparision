@@ -1,4 +1,4 @@
-package pl.michalboryczko.exercise.ui.activesession.chat
+package pl.michalboryczko.exercise.ui.activesession.session
 
 
 import android.os.Bundle
@@ -17,8 +17,6 @@ import pl.michalboryczko.exercise.model.api.Estimation
 import pl.michalboryczko.exercise.model.api.Session
 import pl.michalboryczko.exercise.model.api.Story
 import pl.michalboryczko.exercise.model.base.Status
-import pl.michalboryczko.exercise.model.presentation.ChatMessage
-import pl.michalboryczko.exercise.ui.activesession.*
 
 class SessionFragment : BaseFragment<ActiveSessionViewModel>(), OnStoryClickListener, OnEstimationChoosenListener {
 
@@ -172,10 +170,6 @@ class SessionFragment : BaseFragment<ActiveSessionViewModel>(), OnStoryClickList
 
 
     private fun showStory(story: Story){
-        /*showViews(activeSession, activeStory, activeStoryDescription)
-        activeStory.text = story.story
-        activeStoryDescription.text = story.description*/
-
         storiesAdapter?.notifySelectedElement(story.storyId)
         val estimations = story.estimations
         if(estimations != null){

@@ -7,20 +7,21 @@ import org.junit.Rule
 import org.mockito.Mockito
 import org.mockito.stubbing.OngoingStubbing
 import pl.michalboryczko.exercise.helper.RandomInputs
-import pl.michalboryczko.exercise.model.CryptocurrencyPairDetails
-import pl.michalboryczko.exercise.model.CryptocurrencyPairSimple
-import pl.michalboryczko.exercise.model.api.CurrencyTickerResponse
-import pl.michalboryczko.exercise.model.api.Params
+import pl.michalboryczko.exercise.model.api.*
 import pl.michalboryczko.exercise.model.api.call.LoginCall
 import pl.michalboryczko.exercise.model.api.call.UserCall
+import pl.michalboryczko.exercise.model.presentation.ChatMessage
+import pl.michalboryczko.exercise.model.presentation.User
 import pl.michalboryczko.exercise.source.api.InternetConnectivityChecker
+import java.util.*
 
 open class BaseTest {
-    protected val checker = Mockito.mock(InternetConnectivityChecker::class.java)
+    protected val internetChecker = Mockito.mock(InternetConnectivityChecker::class.java)
 
     @Before
     open fun setUp(){
-        whenever(checker.isInternetAvailableObservable()).thenReturn(Observable.just(true))
+        whenever(internetChecker.isInternetAvailableObservable()).thenReturn(Observable.just(true))
+        whenever(internetChecker.isInternetAvailable()).thenReturn(true)
     }
 
     @Rule
@@ -28,20 +29,14 @@ open class BaseTest {
     val rule = InstantTaskExecutorRule()
 
     val random = RandomInputs()
+    protected val userMock = User("userId", "email",  "username")
+    protected val sessionMock = Session("sessionId", "userId", "sessionName", "sessionPassword", "storyId", null)
 
-    protected val btcUrl = "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/color/btc.png"
-    protected val ethUrl = "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/color/eth.png"
-    protected val pairDetails = CryptocurrencyPairDetails("BTCETH", "23:26:25", "BTC", "ETH", 0.050043, 0.050043,
-            0.050043, "0.050043 ETH", 0.050043)
-    protected val pairResponseMock = CurrencyPairResponse("123", "BTC", "ETH", "0.001", "0.001",
-            "0.001", "0.001",  "ETH")
-    protected val tickerResponseMock = CurrencyTickerResponse(0.050043, 0.050043, 0.050043, 0.050043, 0.050043, 0.050043,
-            23525235235.0, 23525235235.0, "2019-02-23T23:26:25.664Z", "BTCETH")
+    protected val chat1Mock = ChatMessage(userMock.username, "message", Date().toString(), userMock.id, sessionMock.sessionId,  false)
+    protected val estimation1Mock = Estimation("storyId", "2", "michal", "userId")
 
-    protected val cryptocurrencyResponse = CryptocurrencyResponse("", "",
-            Params(0.050043, 0.050043, 0.050043, 0.050043, 0.050043, 0.050043, 0.050043, 0.050043, "2019-02-23T23:26:25.664Z", "BTCETH"))
+    protected val storyMock = Story("storyId", "sessionId", "logging in", "logging description", hashMapOf("userId" to estimation1Mock))
 
-    protected val simpleBtcEthPair = CryptocurrencyPairSimple("BTC", "ETH")
 
 
     inline fun <reified T> mock() = Mockito.mock(T::class.java)

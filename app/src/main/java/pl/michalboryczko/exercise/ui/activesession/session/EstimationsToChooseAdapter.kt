@@ -1,4 +1,4 @@
-package pl.michalboryczko.exercise.ui.activesession
+package pl.michalboryczko.exercise.ui.activesession.session
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.estimation_item.view.*
 import pl.michalboryczko.exercise.R
-import pl.michalboryczko.exercise.model.api.Estimation
 
 
 interface OnEstimationChoosenListener{

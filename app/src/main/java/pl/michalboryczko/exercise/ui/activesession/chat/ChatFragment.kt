@@ -2,7 +2,6 @@ package pl.michalboryczko.exercise.ui.activesession.chat
 
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,11 +15,6 @@ import pl.michalboryczko.exercise.app.BaseFragment
 import pl.michalboryczko.exercise.model.api.Session
 import pl.michalboryczko.exercise.model.base.Status
 import pl.michalboryczko.exercise.model.presentation.ChatMessage
-import pl.michalboryczko.exercise.ui.activesession.ActiveSessionViewModel
-
-
-
-
 
 
 class ChatFragment : BaseFragment<ChatViewModel>() {

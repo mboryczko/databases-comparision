@@ -1,4 +1,4 @@
-package pl.michalboryczko.exercise.ui.activesession
+package pl.michalboryczko.exercise.ui.activesession.session
 
 
 import androidx.lifecycle.MutableLiveData

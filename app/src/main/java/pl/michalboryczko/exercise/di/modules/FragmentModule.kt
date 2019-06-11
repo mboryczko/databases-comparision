@@ -9,7 +9,7 @@ import dagger.multibindings.IntoMap
 import pl.michalboryczko.exercise.di.ViewModelKey
 import pl.michalboryczko.exercise.ui.activesession.chat.ChatFragment
 import pl.michalboryczko.exercise.ui.activesession.chat.ChatViewModel
-import pl.michalboryczko.exercise.ui.activesession.chat.SessionFragment
+import pl.michalboryczko.exercise.ui.activesession.session.SessionFragment
 
 @Module
 internal abstract class FragmentModule {

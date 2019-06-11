@@ -1,54 +1,41 @@
 package pl.michalboryczko.exercise
 
 import io.reactivex.Flowable
-import io.reactivex.Single
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
-import pl.michalboryczko.exercise.model.exceptions.NoInternetException
-import pl.michalboryczko.exercise.source.CryptocurrencyMapper
-import pl.michalboryczko.exercise.source.api.firebase.FirebaseApiService
+import pl.michalboryczko.exercise.source.api.InternetConnectivityChecker
 import pl.michalboryczko.exercise.source.api.firebase.FirestoreApiService
 import pl.michalboryczko.exercise.source.repository.RepositoryImpl
-import pl.michalboryczko.exercise.source.api.websocket.WebSocketApiService
+import pl.michalboryczko.exercise.source.repository.UserRepository
 
 class RepositoryTests: BaseTest() {
 
 
     private val firestoreApiService = Mockito.mock(FirestoreApiService::class.java)
-    private val firebaseApiService = Mockito.mock(FirebaseApiService::class.java)
-    private val repo by lazy { RepositoryImpl(firebaseApiService, firestoreApiService, checker) }
+    private val userRepository = Mockito.mock(UserRepository::class.java)
+    private val repo by lazy { RepositoryImpl(userRepository, firestoreApiService, internetChecker) }
 
     @Before
     override fun setUp(){
-        whenever(firestoreApiService.getCurrencyPairs()).thenReturn(Single.just(listOf(pairResponseMock)))
+        whenever(firestoreApiService.loadStory(sessionMock.sessionId, sessionMock.currentStory!!)).thenReturn(Flowable.just(storyMock))
+        whenever(firestoreApiService.observeSessionById(sessionMock.sessionId)).thenReturn(Flowable.just(sessionMock))
+        whenever(internetChecker.isInternetAvailable()).thenReturn(true)
+    }
+
+
+    @Test
+    fun observeCurrentStoryTest(){
+        repo.observeCurrentStory(sessionMock.sessionId)
+                .test()
+                .assertValue { it.storyId == storyMock.storyId }
+                .assertValue { it.story == storyMock.story }
     }
 
     @Test
-    fun getCryptocurrencyPairsTest(){
-        repo.getCryptocurrencyPairs()
-                .test()
-                .assertValue { it[0].volume == tickerResponseMock.volume }
-                .assertValue { it[0].pair == "BTC/ETH" }
-                .assertValue{it[0].baseCurrency ==  "BTC"}
-    }
-
-    @Test
-    fun getCryptocurrencyDetailsTest(){
-        whenever(webSocketService.observePrice(ArgumentMatchers.anyString())).thenReturn(Flowable.just(cryptocurrencyResponse))
-        repo.getCryptocurrencyDetails(simpleBtcEthPair)
-                .test()
-                .assertValue{it.priceFormatted == "${tickerResponseMock.ask} ${simpleBtcEthPair.quoteCurrency}" }
-                .assertValue{it.symbol == "BTC/ETH" }
-    }
-
-    @Test
-    fun noInternetGetCryptocurrencyPairsTest(){
-        whenever(checker.isInternetAvailable()).thenReturn(false)
-        repo.getCryptocurrencyPairs()
-                .test()
-                .assertError(NoInternetException::class.java)
+    fun internetConnectivityChecker(){
+        Assert.assertEquals(internetChecker.isInternetAvailable(), true)
     }
 
 

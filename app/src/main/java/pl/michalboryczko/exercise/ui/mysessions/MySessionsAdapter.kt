@@ -13,15 +13,9 @@ interface OnSessionClickedListener{
     fun sessionClicked(session: Session)
 }
 
-
-
 class MySessionsAdapter(val items : List<Session>, val context: Context, val sessionClickedListener: OnSessionClickedListener) : RecyclerView.Adapter<MySessionsAdapter.ViewHolder>() {
 
-
-
     override fun getItemCount(): Int = items.size
-
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MySessionsAdapter.ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.session_item, parent, false))
@@ -43,8 +37,5 @@ class MySessionsAdapter(val items : List<Session>, val context: Context, val ses
                 sessionClickedListener.sessionClicked(items[layoutPosition])
             }
         }
-
-
-
     }
 }

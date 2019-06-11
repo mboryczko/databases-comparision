@@ -1,6 +1,5 @@
 package pl.michalboryczko.exercise.ui.session
 
-import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import pl.michalboryczko.exercise.R
 import android.app.Activity
@@ -32,14 +31,12 @@ class SessionDialog(val context: Activity, val listener: OnSessionListener){
     private lateinit var estimationsSpinner: AppCompatSpinner
 
 
-    fun initialize(){
+    private fun initialize(){
         val view = context.layoutInflater.inflate(R.layout.session_create_dialog, null)
         sessionIdEditText = view.findViewById(R.id.sessionIdEditText)
         sessionPasswordEditText = view.findViewById(R.id.sessionPasswordEditText)
         estimationsSpinner = view.findViewById(R.id.estimationsSpinner)
         estimationsSpinner.adapter = ArrayAdapter<String>(context, R.layout.simple_spinner_item, context.resources.getStringArray(R.array.estimation_options))
-
-
 
         builder = MaterialDialog.Builder(context)
                 .customView(view, true)
@@ -48,7 +45,7 @@ class SessionDialog(val context: Activity, val listener: OnSessionListener){
                 .onNegative { dialog, _ -> dialog.dismiss() }
     }
 
-    fun showEstimationOptions(){
+    private fun showEstimationOptions(){
         estimationsSpinner.visibility = View.VISIBLE
     }
 

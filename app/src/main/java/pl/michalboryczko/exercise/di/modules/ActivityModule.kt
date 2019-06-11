@@ -7,7 +7,7 @@ import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 import pl.michalboryczko.exercise.di.ViewModelKey
 import pl.michalboryczko.exercise.ui.activesession.ActiveSessionActivity
-import pl.michalboryczko.exercise.ui.activesession.ActiveSessionViewModel
+import pl.michalboryczko.exercise.ui.activesession.session.ActiveSessionViewModel
 import pl.michalboryczko.exercise.ui.session.SessionActivity
 import pl.michalboryczko.exercise.ui.session.SessionViewModel
 import pl.michalboryczko.exercise.ui.login.LoginActivity

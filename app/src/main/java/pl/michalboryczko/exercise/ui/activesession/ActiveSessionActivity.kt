@@ -3,15 +3,13 @@ package pl.michalboryczko.exercise.ui.activesession
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_active_session.*
 import pl.michalboryczko.exercise.R
 import pl.michalboryczko.exercise.app.BaseActivity
 import pl.michalboryczko.exercise.model.api.Session
 import pl.michalboryczko.exercise.ui.activesession.chat.ChatFragment
-import pl.michalboryczko.exercise.ui.activesession.chat.SessionFragment
+import pl.michalboryczko.exercise.ui.activesession.session.SessionFragment
+import pl.michalboryczko.exercise.ui.activesession.session.ActiveSessionViewModel
 import pl.michalboryczko.exercise.utils.Constants
 
 

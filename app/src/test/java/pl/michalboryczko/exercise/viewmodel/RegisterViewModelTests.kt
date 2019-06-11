@@ -1,8 +1,11 @@
 package pl.michalboryczko.quickmaths
 
+import io.reactivex.Flowable
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import junit.framework.Assert
+import org.junit.Before
 import org.junit.Test
 
 
@@ -19,8 +22,14 @@ import pl.michalboryczko.exercise.ui.register.RegisterViewModel
 class RegisterViewModelTests: BaseTest() {
 
     private val repo = mock(UserRepository::class.java)
-    private val viewmodel by lazy { RegisterViewModel(repo, checker, Schedulers.trampoline(), Schedulers.trampoline()) }
+    private val viewmodel by lazy { RegisterViewModel(repo, internetChecker, Schedulers.trampoline(), Schedulers.trampoline()) }
 
+
+    @Before
+    override fun setUp(){
+        whenever(repo.isUserLoggedIn()).thenReturn(Flowable.just(true))
+        whenever(internetChecker.isInternetAvailableObservable()).thenReturn(Observable.just(true))
+    }
 
     @Test
     fun registerUserPositiveTest(){

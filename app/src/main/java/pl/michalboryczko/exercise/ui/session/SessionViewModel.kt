@@ -31,7 +31,6 @@ class SessionViewModel
 ) : BaseViewModel(checker, userRepository) {
 
     val session: MutableLiveData<Resource<Session>> = MutableLiveData()
-    val master: MutableLiveData<Resource<Session>> = MutableLiveData()
 
     init {
         session.value = Resource.initial()
@@ -41,12 +40,6 @@ class SessionViewModel
     fun onResume() {
         session.value = Resource.initial()
     }
-
-    fun mySessions(){
-
-    }
-
-
 
     fun joinSession(sessionId: String, password: String) {
         disposables.add(
