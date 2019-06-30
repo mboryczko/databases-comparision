@@ -8,7 +8,6 @@ data class Session(
         val managerId: String = "",
         val name: String = "",
         val password: String = "",
-        //todo to be removed
         val currentStory: String? = null,
         val options: List<String>? = null
 ): Serializable

@@ -16,7 +16,6 @@
     <string-array name="estimation_options">
         <item>1, 2, 4, 8, 16, 32, 64</item>
         <item>1, 2, 3, 5, 8, 13, 20, 40</item>
-
     </string-array>
 
 
@@ -31,6 +30,7 @@
     <!--session-->
     <string name="stories">Stories for this session: </string>
     <string name="estimations">Estimations for this story: </string>
+    <string name="message_added">Message added</string>
 
 
     <!--errors -->
@@ -59,7 +59,4 @@
     <string name="login_successful">Logged in successfully</string>
     <string name="register_prompt">Don\'t have an account? </string>
     <string name="register_here">Register here.</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

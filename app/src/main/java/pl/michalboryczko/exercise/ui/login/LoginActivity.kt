@@ -21,9 +21,6 @@ class LoginActivity : BaseActivity<LoginViewModel>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        emailEditText.setText("a@a.pl")
-        passwordEditText.setText("testtest1")
-
         loginButton.setOnClickListener { viewModel.loginClicked(
                 LoginCall(
                         emailEditText.text.toString(),

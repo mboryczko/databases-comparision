@@ -3,6 +3,7 @@ package pl.michalboryczko.exercise.ui.activesession.chat
 
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.Scheduler
+import pl.michalboryczko.exercise.R
 import pl.michalboryczko.exercise.app.BaseViewModel
 import pl.michalboryczko.exercise.model.ActiveSession
 import pl.michalboryczko.exercise.model.api.Session
@@ -60,7 +61,7 @@ class ChatViewModel
                             .observeOn(mainScheduler)
                             .subscribe(
                                     {
-                                        toastInfo.value = Event("message added")
+                                        toastInfoResource.value = Event(R.string.message_added)
                                     },
                                     {defaultErrorHandling(it)}
                             )
