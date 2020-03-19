@@ -7,24 +7,29 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 import pl.michalboryczko.exercise.di.ViewModelKey
-import pl.michalboryczko.exercise.ui.activesession.chat.ChatFragment
-import pl.michalboryczko.exercise.ui.activesession.chat.ChatViewModel
-import pl.michalboryczko.exercise.ui.activesession.session.SessionFragment
+import pl.michalboryczko.exercise.ui.learnwords.WordsLearningFragment
+import pl.michalboryczko.exercise.ui.learnwords.WordsLearningViewModel
+import pl.michalboryczko.exercise.ui.settings.SettingsFragment
+import pl.michalboryczko.exercise.ui.settings.SettingsViewModel
 
 @Module
 internal abstract class FragmentModule {
 
     @ContributesAndroidInjector()
-    internal abstract fun bindChatFragment(): ChatFragment
+    internal abstract fun bindSettingsFragment(): SettingsFragment
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SettingsViewModel::class)
+    abstract fun bindSettingsViewModel(viewModel: SettingsViewModel): ViewModel
 
 
     @ContributesAndroidInjector()
-    internal abstract fun bindSessionFragment(): SessionFragment
+    internal abstract fun bindWordsLearningFragment(): WordsLearningFragment
 
 
     @Binds
     @IntoMap
-    @ViewModelKey(ChatViewModel::class)
-    abstract fun bindActiveSessionViewModel(viewModel: ChatViewModel): ViewModel
-
+    @ViewModelKey(WordsLearningViewModel::class)
+    abstract fun bindWordsLearningViewModel(viewModel: WordsLearningViewModel): ViewModel
 }

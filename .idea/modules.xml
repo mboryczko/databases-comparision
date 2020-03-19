@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ScrumPoker.iml" filepath="$PROJECT_DIR$/ScrumPoker.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/databases-comparision.iml" filepath="$PROJECT_DIR$/databases-comparision.iml" />
     </modules>
   </component>
 </project>

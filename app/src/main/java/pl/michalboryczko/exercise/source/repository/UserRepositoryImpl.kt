@@ -1,53 +1,31 @@
 package pl.michalboryczko.exercise.source.repository
 
-import io.reactivex.Flowable
+import io.reactivex.Completable
 import io.reactivex.Single
-import pl.michalboryczko.exercise.model.api.call.LoginCall
-import pl.michalboryczko.exercise.model.api.call.UserCall
-import pl.michalboryczko.exercise.model.presentation.User
+import io.realm.Realm
+import pl.michalboryczko.exercise.model.database.realm.TranslateRealm
+import pl.michalboryczko.exercise.model.database.room.RoomDatabase
+import pl.michalboryczko.exercise.model.database.room.TranslateRoom
+import pl.michalboryczko.exercise.model.database.room.convertToTranslate
+import pl.michalboryczko.exercise.model.presentation.Translate
 import pl.michalboryczko.exercise.source.api.InternetConnectivityChecker
-import pl.michalboryczko.exercise.source.api.firebase.FirebaseApiService
+import pl.michalboryczko.exercise.source.databases.DatabaseOperations
 
 class UserRepositoryImpl (
-        private var firebaseApiService: FirebaseApiService,
+        private var room: DatabaseOperations,
+        private var realm: DatabaseOperations,
+
         private val checker: InternetConnectivityChecker
 ) :UserRepository, NetworkRepository(checker) {
 
-
-    override fun logIn(input: LoginCall): Single<Boolean> {
-        return firebaseApiService.logIn(input)
-                .compose(handleExceptions())
+    override fun getAllWords(): Single<List<Translate>> {
+        return room.fetchAllWords()
+                .flatMap { realm.fetchAllWords() }
     }
 
-    override fun logout(): Single<Boolean> {
-        return firebaseApiService.logout()
+    override fun saveAllWords(words: List<Translate>): Completable {
+        return room.saveAllWords(words)
+                .andThen(realm.saveAllWords(words))
     }
 
-    override fun isUserLoggedIn(): Flowable<Boolean> {
-        return firebaseApiService.isUserLoggedIn()
-                .compose(handleNetworkConnectionFlowable())
-                .compose(handleExceptionsFlowable())
-    }
-
-    override fun createUser(user: UserCall): Single<Boolean> {
-        return firebaseApiService
-                .createUser(user)
-                .flatMap {
-                    firebaseApiService.addUser(user, it)
-                }
-                .compose(handleNetworkConnection())
-                .compose(handleExceptions())
-                .map { true }
-    }
-
-    override fun getCurrentUser(): Single<User> {
-        return firebaseApiService
-                .getCurrentUser()
-    }
-
-    override fun getCurrentUserId(): Single<String> {
-        return firebaseApiService
-            .getCurrentUser()
-                .map { it.id }
-    }
 }

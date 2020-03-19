@@ -1,6 +1,7 @@
 package pl.michalboryczko.exercise.di.modules
 
 import android.content.Context
+import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
@@ -17,13 +18,15 @@ import pl.michalboryczko.exercise.source.api.rest.Api
 import pl.michalboryczko.exercise.source.api.InternetConnectivityChecker
 import pl.michalboryczko.exercise.source.api.firebase.FirebaseApiService
 import pl.michalboryczko.exercise.source.api.firebase.FirestoreApiService
+import pl.michalboryczko.exercise.source.api.rest.HeaderInterceptor
 import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 
 
 @Module
 class NetworkModule {
 
-    val restApiendpoint: String = "https://api.hitbtc.com"
+    val restApiendpoint: String = "http://api.football-data.org"
     val webSocketEndpoint = "wss://api.hitbtc.com/api/2/ws"
 
     @Provides
@@ -34,6 +37,12 @@ class NetworkModule {
     @Provides
     fun provideRxJavaAdapterFactory(): RxJava2CallAdapterFactory {
         return RxJava2CallAdapterFactory.create()
+    }
+
+    @Singleton
+    @Provides
+    fun provideHeaderInterceptor(): HeaderInterceptor {
+        return HeaderInterceptor()
     }
 
 
@@ -51,11 +60,12 @@ class NetworkModule {
     }
 
     @Provides
-    fun provideDefaultOkHttpClient(interceptor: HttpLoggingInterceptor): OkHttpClient {
+    fun provideDefaultOkHttpClient(headerInterceptor: HeaderInterceptor): OkHttpClient {
         return OkHttpClient().newBuilder()
                 .readTimeout(30, TimeUnit.SECONDS)
                 .connectTimeout(30, TimeUnit.SECONDS)
-                .addInterceptor(interceptor)
+                .addInterceptor(headerInterceptor)
+                .addNetworkInterceptor(StethoInterceptor())
                 .build()
 
     }

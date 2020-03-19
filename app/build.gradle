@@ -4,12 +4,14 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: "androidx.navigation.safeargs.kotlin"
+apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "pl.michalboryczko.exercise"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -35,11 +37,28 @@ android {
 }
 
 dependencies {
+    def nav_version = "2.1.0"
+    def stethoVersion = "1.5.0"
+    def room_version = "2.2.5"
+
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
     implementation 'com.google.android.material:material:1.0.0-beta01'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
+
+    //animations
+    implementation 'com.daimajia.easing:library:2.0@aar'
+    implementation 'com.daimajia.androidanimations:library:2.3@aar'
+
+    //rooms
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-rxjava2:$room_version"
+
+    //stetho
+    implementation 'com.facebook.stetho:stetho:1.5.1'
+
 
 
     implementation 'com.afollestad.material-dialogs:core:0.9.4.5'
@@ -84,10 +103,20 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
 
     //leakcanary
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-alpha-1'
+    //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-alpha-1'
 
     //dex
     implementation 'androidx.multidex:multidex:2.0.0'
+
+    //stetho
+    implementation "com.facebook.stetho:stetho:$stethoVersion"
+    implementation "com.facebook.stetho:stetho-okhttp3:$stethoVersion"
+    implementation "com.facebook.stetho:stetho-okhttp:$stethoVersion"
+    implementation "com.facebook.stetho:stetho-urlconnection:$stethoVersion"
+
+    //navigation graph
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.10.0'

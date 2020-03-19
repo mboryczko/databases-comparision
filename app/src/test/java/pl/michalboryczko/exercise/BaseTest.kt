@@ -10,7 +10,6 @@ import pl.michalboryczko.exercise.helper.RandomInputs
 import pl.michalboryczko.exercise.model.api.*
 import pl.michalboryczko.exercise.model.api.call.LoginCall
 import pl.michalboryczko.exercise.model.api.call.UserCall
-import pl.michalboryczko.exercise.model.presentation.ChatMessage
 import pl.michalboryczko.exercise.model.presentation.User
 import pl.michalboryczko.exercise.source.api.InternetConnectivityChecker
 import java.util.*
@@ -32,7 +31,7 @@ open class BaseTest {
     protected val userMock = User("userId", "email",  "username")
     protected val sessionMock = Session("sessionId", "userId", "sessionName", "sessionPassword", "storyId", null)
 
-    protected val chat1Mock = ChatMessage(userMock.username, "message", Date().toString(), userMock.id, sessionMock.sessionId,  false)
+    //protected val chat1Mock = ChatMessage(userMock.username, "message", Date().toString(), userMock.id, sessionMock.sessionId,  false)
     protected val estimation1Mock = Estimation("storyId", "2", "michal", "userId")
 
     protected val storyMock = Story("storyId", "sessionId", "logging in", "logging description", hashMapOf("userId" to estimation1Mock))

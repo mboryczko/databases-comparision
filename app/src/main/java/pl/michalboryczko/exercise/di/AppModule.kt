@@ -2,6 +2,7 @@ package pl.michalboryczko.exercise.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.room.Room
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Scheduler
@@ -9,6 +10,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import pl.michalboryczko.exercise.app.MainApplication
 import pl.michalboryczko.exercise.app.Navigator
+import pl.michalboryczko.exercise.model.database.room.RoomDatabase
+import pl.michalboryczko.exercise.model.database.room.TranslateDAO
 import pl.michalboryczko.exercise.utils.Constants.Companion.COMPUTATION_SCHEDULER
 import pl.michalboryczko.exercise.utils.Constants.Companion.MAIN_SCHEDULER
 import javax.inject.Named
@@ -22,7 +25,6 @@ class AppModule{
     fun providesContext(application: MainApplication): Context {
         return application.applicationContext
     }
-
 
     @Provides
     @Named(COMPUTATION_SCHEDULER)
@@ -40,11 +42,6 @@ class AppModule{
     fun provideNavigator(): Navigator{
         return Navigator()
     }
-
-    /*@Provides
-    fun provideUserValidator(): UserValidator{
-        return UserValidator()
-    }*/
 
     @Provides
     @Singleton

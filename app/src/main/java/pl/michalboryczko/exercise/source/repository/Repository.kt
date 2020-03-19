@@ -1,38 +1,17 @@
 package pl.michalboryczko.exercise.source.repository
 
-import io.reactivex.Flowable
-import io.reactivex.Observable
+import io.reactivex.Completable
 import io.reactivex.Single
-import pl.michalboryczko.exercise.model.CryptocurrencyPairDetails
-import pl.michalboryczko.exercise.model.CryptocurrencyPair
-import pl.michalboryczko.exercise.model.CryptocurrencyPairSimple
-import pl.michalboryczko.exercise.model.api.Estimation
-import pl.michalboryczko.exercise.model.api.Session
-import pl.michalboryczko.exercise.model.api.Story
-import pl.michalboryczko.exercise.model.api.call.LoginCall
-import pl.michalboryczko.exercise.model.api.call.UserCall
-import pl.michalboryczko.exercise.model.presentation.ChatMessage
-import pl.michalboryczko.exercise.model.presentation.User
+import pl.michalboryczko.exercise.model.database.realm.TranslateRealm
+import pl.michalboryczko.exercise.model.database.room.TranslateRoom
+import pl.michalboryczko.exercise.model.presentation.Translate
 
 interface Repository {
-    fun createSession(name: String, password: String, estimationOptions: List<String>): Single<Session>
-    fun createStory(sessionId: String, story:String, description: String): Single<Story>
-    fun saveEstimation(storyId: String, points: String): Single<Boolean>
-    fun observeStories(sessionId: String): Flowable<List<Story>>
-    fun observeCurrentStory(sessionId: String): Flowable<Story>
-    fun joinSession(sessionId: String, password: String): Single<Session>
-    fun updateCurrentStoryUnderSession(story:Story): Single<Boolean>
-    fun observeMessages(sessionId: String): Flowable<List<ChatMessage>>
-    fun addMessage(sessionId: String, chatMessage: String): Single<Boolean>
-    fun getUserSessions(): Single<List<Session>>
 
 }
 
 interface UserRepository{
-    fun logIn(input: LoginCall): Single<Boolean>
-    fun logout(): Single<Boolean>
-    fun isUserLoggedIn(): Flowable<Boolean>
-    fun createUser(user: UserCall): Single<Boolean>
-    fun getCurrentUser(): Single<User>
-    fun getCurrentUserId(): Single<String>
+    fun getAllWords(): Single<List<Translate>>
+    fun saveAllWords(words: List<Translate>): Completable
+
 }

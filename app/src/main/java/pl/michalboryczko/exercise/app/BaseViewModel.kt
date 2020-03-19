@@ -11,9 +11,9 @@ import pl.michalboryczko.exercise.model.exceptions.*
 import pl.michalboryczko.exercise.source.api.InternetConnectivityChecker
 import pl.michalboryczko.exercise.source.repository.UserRepository
 import timber.log.Timber
+import java.util.*
 
 abstract class BaseViewModel(
-        internetConnectivityChecker: InternetConnectivityChecker,
         userRepository: UserRepository
         ): ViewModel(), LifecycleObserver {
 
@@ -25,22 +25,10 @@ abstract class BaseViewModel(
     val error: MutableLiveData<Event<Int>> = MutableLiveData()
 
     init {
-        disposables.add(
-                internetConnectivityChecker
-                        .isInternetAvailableObservable()
-                        .subscribe{ internetConnectivity.value = it }
-        )
 
-        disposables.add(
-                userRepository
-                        .isUserLoggedIn()
-                        .subscribe(
-                                {loggedInStatus.value = it },
-                                {}
-                        )
-        )
     }
 
+    fun getTodayDate() = Calendar.getInstance().time
 
 
 

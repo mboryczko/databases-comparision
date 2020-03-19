@@ -35,14 +35,11 @@ abstract class BaseActivity<T: BaseViewModel>  : DaggerAppCompatActivity() {
     }
 
     abstract fun initViewModel()
-    abstract fun defaultErrorHandling(res: Int)
 
     fun observeUserLoginStatus(){
         viewModel.loggedInStatus.observe(this, Observer {
             it?.let { isLoggedIn ->
-                if(!isLoggedIn){
-                    navigator.navigateToLoginActivity(this)
-                }
+
             }
         })
     }
@@ -51,8 +48,6 @@ abstract class BaseActivity<T: BaseViewModel>  : DaggerAppCompatActivity() {
         viewModel.error.observe(this, Observer {
             it?.let { msg ->
                 val res = msg.getContentIfNotHandled()
-                if(res != null)
-                    defaultErrorHandling(res)
 
             }
         })

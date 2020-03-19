@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MichałBoryczko</string>
+    <string name="app_name">Database comparision</string>
     <string name="pairDescriptionTextView">Market</string>
     <string name="lastPriceDescriptionTextView">Last Price</string>
     <string name="volumeDescriptionTextView">Volume</string>
@@ -59,4 +59,7 @@
     <string name="login_successful">Logged in successfully</string>
     <string name="register_prompt">Don\'t have an account? </string>
     <string name="register_here">Register here.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

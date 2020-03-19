@@ -15,8 +15,6 @@ import pl.michalboryczko.exercise.model.api.call.LoginCall
 import pl.michalboryczko.exercise.model.api.call.UserCall
 import pl.michalboryczko.exercise.model.exceptions.NotFoundException
 import pl.michalboryczko.exercise.model.exceptions.WrongPasswordException
-import pl.michalboryczko.exercise.model.presentation.ChatMessage
-import pl.michalboryczko.exercise.model.presentation.Message
 import pl.michalboryczko.exercise.model.presentation.User
 import timber.log.Timber
 import java.util.*
@@ -102,36 +100,6 @@ class FirestoreApiService(
                             .document(sessionId)
                             .set(session)
                             .addOnSuccessListener { emitter.onSuccess(session) }
-                            .addOnFailureListener{ emitter.onError(it)}
-                }
-    }
-
-    fun observeChatMessages(sessionId: String): Observable<List<ChatMessage>> {
-        return Observable.create{ emitter ->
-            db.collection(MESSAGES)
-                    .whereEqualTo(SESSION_ID, sessionId)
-                    .orderBy(TIME)
-                    .addSnapshotListener { value, e ->
-                        if (e != null) {
-                            emitter.onError(e)
-                        }
-
-                        if(value != null){
-                            val m = value.toObjects(ChatMessage::class.java)
-                            emitter.onNext(m)
-                        }
-                    }
-        }
-    }
-
-    fun addMessage(sessionId: String, user: User, message: String): Single<Boolean>{
-        val chatMessage = Message(user.username, message, Date().toString(), user.id, sessionId)
-        return Single
-                .create { emitter ->
-                    db.collection(MESSAGES)
-                            .document()
-                            .set(chatMessage)
-                            .addOnSuccessListener { emitter.onSuccess(true) }
                             .addOnFailureListener{ emitter.onError(it)}
                 }
     }

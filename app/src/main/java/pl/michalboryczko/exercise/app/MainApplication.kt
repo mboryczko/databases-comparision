@@ -1,10 +1,11 @@
 package pl.michalboryczko.exercise.app
 
 import androidx.multidex.MultiDex
+import com.facebook.stetho.Stetho
 import com.google.firebase.FirebaseApp
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
-import leakcanary.LeakCanary
+import io.realm.Realm
 import pl.michalboryczko.exercise.di.DaggerAppComponent
 import timber.log.Timber
 
@@ -17,6 +18,8 @@ class MainApplication: DaggerApplication() {
         MultiDex.install(this)
         FirebaseApp.initializeApp(this)
         Timber.plant(CustomLoggingTree())
+        Stetho.initializeWithDefaults(this)
+        Realm.init(this)
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
