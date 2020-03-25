@@ -12,6 +12,7 @@ import pl.michalboryczko.exercise.model.presentation.Translate
 import pl.michalboryczko.exercise.source.api.InternetConnectivityChecker
 import pl.michalboryczko.exercise.source.databases.CouchbaseDatabaseImpl
 import pl.michalboryczko.exercise.source.databases.DatabaseOperations
+import pl.michalboryczko.exercise.source.databases.ObjectBoxDatabaseImpl
 import pl.michalboryczko.exercise.source.databases.OrmLiteDatabaseImpl
 import timber.log.Timber
 
@@ -20,13 +21,12 @@ class UserRepositoryImpl (
         private var realm: DatabaseOperations,
         private var couchbase: CouchbaseDatabaseImpl,
         private var ormLite: OrmLiteDatabaseImpl,
-
-
+        private var objectBox: ObjectBoxDatabaseImpl,
         private val checker: InternetConnectivityChecker
 ) :UserRepository, NetworkRepository(checker) {
 
     override fun getAllWords(): Single<List<Translate>> {
-        return Single.defer { ormLite.fetchAllWords() }
+        return Single.defer { objectBox.fetchAllWords() }
     }
 
     override fun saveAllWords(words: List<Translate>): Completable {
@@ -37,7 +37,7 @@ class UserRepositoryImpl (
 
 
         //return ormLite.saveAllWords(words)
-        return Completable.defer { ormLite.saveAllWords(words) }
+        return Completable.defer { objectBox.saveAllWords(words) }
     }
 
 }

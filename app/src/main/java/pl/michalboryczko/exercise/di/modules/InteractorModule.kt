@@ -11,10 +11,7 @@ import pl.michalboryczko.exercise.source.api.InternetConnectivityChecker
 import pl.michalboryczko.exercise.source.repository.*
 import pl.michalboryczko.exercise.model.database.room.RoomDatabase
 import pl.michalboryczko.exercise.source.api.rest.Api
-import pl.michalboryczko.exercise.source.databases.CouchbaseDatabaseImpl
-import pl.michalboryczko.exercise.source.databases.OrmLiteDatabaseImpl
-import pl.michalboryczko.exercise.source.databases.RealmDatabaseImpl
-import pl.michalboryczko.exercise.source.databases.RoomDatabaseImpl
+import pl.michalboryczko.exercise.source.databases.*
 import javax.inject.Singleton
 
 
@@ -38,6 +35,10 @@ class InteractorModule {
     fun provideOrmDBHelperDatabase(app: MainApplication): OrmLiteDBHelper{
         return OrmLiteDBHelper(app)
     }
+
+    @Provides
+    @Singleton
+    fun provideObjectBoxDatabaseImpl(): ObjectBoxDatabaseImpl = ObjectBoxDatabaseImpl()
 
     @Provides
     @Singleton
@@ -71,9 +72,10 @@ class InteractorModule {
             realm: RealmDatabaseImpl,
             couchbase: CouchbaseDatabaseImpl,
             ormLiteDatabaseImpl: OrmLiteDatabaseImpl,
+            objectBoxDatabaseImpl: ObjectBoxDatabaseImpl,
             checker: InternetConnectivityChecker
     ): UserRepository {
-        return UserRepositoryImpl(room, realm, couchbase, ormLiteDatabaseImpl, checker)
+        return UserRepositoryImpl(room, realm, couchbase, ormLiteDatabaseImpl, objectBoxDatabaseImpl,  checker)
     }
 
 }

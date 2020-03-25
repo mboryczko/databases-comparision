@@ -8,6 +8,7 @@ import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import io.realm.Realm
 import pl.michalboryczko.exercise.di.DaggerAppComponent
+import pl.michalboryczko.exercise.model.database.objectbox.ObjectBox
 import timber.log.Timber
 
 
@@ -22,6 +23,7 @@ class MainApplication: DaggerApplication() {
         Stetho.initializeWithDefaults(this)
         Realm.init(this)
         CouchbaseLite.init(this)
+        ObjectBox.init(this);
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
