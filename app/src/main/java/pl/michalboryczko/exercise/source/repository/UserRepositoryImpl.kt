@@ -3,22 +3,14 @@ package pl.michalboryczko.exercise.source.repository
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.realm.Realm
-import pl.michalboryczko.exercise.model.database.realm.TranslateRealm
-import pl.michalboryczko.exercise.model.database.room.RoomDatabase
-import pl.michalboryczko.exercise.model.database.room.TranslateRoom
-import pl.michalboryczko.exercise.model.database.room.convertToTranslate
 import pl.michalboryczko.exercise.model.presentation.Translate
 import pl.michalboryczko.exercise.source.api.InternetConnectivityChecker
-import pl.michalboryczko.exercise.source.databases.CouchbaseDatabaseImpl
 import pl.michalboryczko.exercise.source.databases.DatabaseOperations
-import pl.michalboryczko.exercise.source.databases.ObjectBoxDatabaseImpl
-import pl.michalboryczko.exercise.source.databases.OrmLiteDatabaseImpl
-import timber.log.Timber
+import pl.michalboryczko.exercise.source.databases.impl.*
 
 class UserRepositoryImpl (
-        private var room: DatabaseOperations,
-        private var realm: DatabaseOperations,
+        private var room: RoomDatabaseImpl,
+        private var realm: RealmDatabaseImpl,
         private var couchbase: CouchbaseDatabaseImpl,
         private var ormLite: OrmLiteDatabaseImpl,
         private var objectBox: ObjectBoxDatabaseImpl,
@@ -27,6 +19,9 @@ class UserRepositoryImpl (
 
     override fun getAllWords(): Single<List<Translate>> {
         return Single.defer { objectBox.fetchAllWords() }
+                .flatMap { room.fetchAllWords() }
+                //.flatMap { ormLite.fetchAllWords() }
+                .flatMap { realm.fetchAllWords() }
     }
 
     override fun saveAllWords(words: List<Translate>): Completable {
@@ -35,9 +30,13 @@ class UserRepositoryImpl (
                 .andThen(realm.saveAllWords(words))
                 .andThen(ormLite.saveAllWords(words))*/
 
+        return Completable.defer { objectBox.saveAllWords(words) }
+                .andThen(room.saveAllWords(words))
+                .observeOn(AndroidSchedulers.mainThread())
+                //.andThen{ ormLite.saveAllWords(words) }
+                .andThen(realm.saveAllWords(words) )
 
         //return ormLite.saveAllWords(words)
-        return Completable.defer { objectBox.saveAllWords(words) }
     }
 
 }

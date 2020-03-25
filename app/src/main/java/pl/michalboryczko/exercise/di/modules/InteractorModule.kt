@@ -11,7 +11,7 @@ import pl.michalboryczko.exercise.source.api.InternetConnectivityChecker
 import pl.michalboryczko.exercise.source.repository.*
 import pl.michalboryczko.exercise.model.database.room.RoomDatabase
 import pl.michalboryczko.exercise.source.api.rest.Api
-import pl.michalboryczko.exercise.source.databases.*
+import pl.michalboryczko.exercise.source.databases.impl.*
 import javax.inject.Singleton
 
 

@@ -1,9 +1,10 @@
-package pl.michalboryczko.exercise.source.databases
+package pl.michalboryczko.exercise.source.databases.impl
 
 import io.reactivex.Completable
 import io.reactivex.Single
 import pl.michalboryczko.exercise.model.presentation.Translate
 import com.couchbase.lite.*
+import pl.michalboryczko.exercise.source.databases.DatabaseOperations
 import timber.log.Timber
 
 

@@ -25,10 +25,10 @@ class MainActivity : BaseActivity<MainViewModel>() {
 
     fun registerListeners(){
         viewModel.sentences.observe(this, Observer {sentences->
-            Timber.d("sentences ${sentences[0].english} ${sentences[0].spanish}")
+            //Timber.d("sentences ${sentences[0].english} ${sentences[0].spanish}")
         })
         viewModel.words.observe(this, Observer {words->
-            Timber.d("words ${words[0].english} ${words[0].spanish}")
+            //Timber.d("words ${words[0].english} ${words[0].spanish}")
         })
     }
 

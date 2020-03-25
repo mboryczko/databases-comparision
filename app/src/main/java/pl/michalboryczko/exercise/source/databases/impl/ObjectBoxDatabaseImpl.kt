@@ -1,4 +1,4 @@
-package pl.michalboryczko.exercise.source.databases
+package pl.michalboryczko.exercise.source.databases.impl
 
 import io.objectbox.Box
 import io.objectbox.kotlin.boxFor
@@ -8,6 +8,7 @@ import pl.michalboryczko.exercise.model.database.objectbox.ObjectBox
 import pl.michalboryczko.exercise.model.database.objectbox.TranslateObjectBox
 import pl.michalboryczko.exercise.model.database.objectbox.convertToTranslateObjectBoxLiteList
 import pl.michalboryczko.exercise.model.presentation.Translate
+import pl.michalboryczko.exercise.source.databases.DatabaseOperations
 import timber.log.Timber
 
 

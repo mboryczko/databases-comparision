@@ -10,7 +10,7 @@ class WordParser{
     companion object {
         fun parseWords(fileName: String): List<Translate>{
             val translates = mutableListOf<Translate>()
-            Timber.d("words parse processing")
+            //Timber.d("words parse processing")
             val downlaodDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
             File(downlaodDirectory, fileName).forEachLine { line->
                 val words = line.split(" ")
@@ -23,7 +23,7 @@ class WordParser{
 
 
         fun parseSentences(fileName: String): List<Translate>{
-            Timber.d("sentences parse sentences")
+            //Timber.d("sentences parse sentences")
             val translates = mutableListOf<Translate>()
             var i = 0
             val downlaodDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
@@ -33,7 +33,7 @@ class WordParser{
                 i += 4
             }
 
-            Timber.d("sentences parse sentences END")
+            //Timber.d("sentences parse sentences END")
             return translates
         }
     }

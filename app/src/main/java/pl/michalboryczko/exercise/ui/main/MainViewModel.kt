@@ -30,7 +30,7 @@ class MainViewModel
 
         words.value = parseWords("dictionary.txt")
         sentences.value = parseSentences("sentences.txt")
-        Timber.d("end processing")
+        //Timber.d("end processing")
     }
 
 }

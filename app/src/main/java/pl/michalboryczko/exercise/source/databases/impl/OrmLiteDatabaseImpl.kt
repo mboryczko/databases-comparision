@@ -1,4 +1,4 @@
-package pl.michalboryczko.exercise.source.databases
+package pl.michalboryczko.exercise.source.databases.impl
 
 import android.os.Looper
 import io.reactivex.Completable
@@ -7,6 +7,7 @@ import pl.michalboryczko.exercise.model.presentation.Translate
 import pl.michalboryczko.exercise.model.database.ormlite.OrmLiteDBHelper
 import pl.michalboryczko.exercise.model.database.ormlite.TranslateOrmLite
 import pl.michalboryczko.exercise.model.database.ormlite.convertToTranslateOrmLiteList
+import pl.michalboryczko.exercise.source.databases.DatabaseOperations
 import timber.log.Timber
 import java.sql.SQLException
 
