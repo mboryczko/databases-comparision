@@ -8,7 +8,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 
 @Dao
-interface TranslateDAO{
+interface TranslateRoomDAO{
 
     @Query("SELECT * FROM ${TranslateRoom.TABLE_NAME}")
     fun queryTranslates(): Single<List<TranslateRoom>>

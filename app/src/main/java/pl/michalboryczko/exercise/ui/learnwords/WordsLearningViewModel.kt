@@ -4,6 +4,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.OnLifecycleEvent
 import io.reactivex.Scheduler
+import io.reactivex.Single
 import pl.michalboryczko.exercise.app.BaseViewModel
 import pl.michalboryczko.exercise.model.base.Resource
 import pl.michalboryczko.exercise.model.database.realm.convertToTranslateRealmList
@@ -44,14 +45,15 @@ class WordsLearningViewModel
 
     fun getWordsFromDb(){
         val timer = ExecutionTimer()
-        disposables += userRepository
-                .getAllWords()
+        disposables +=
+                Single.just(true)
+                .flatMap { userRepository.getAllWords() }
                 .subscribeOn(computationScheduler)
-                .observeOn(mainScheduler)
+                .observeOn(computationScheduler)
                 .doOnSubscribe { timer.startTimer() }
                 .subscribe(
                         {
-                            timer.stopTimer("VIEWMODEL")
+                            timer.stopTimer("VIEWMODEL get")
                             Timber.d("getWordsFromDb count: ${it.count()}")
                         },
                         {
@@ -70,12 +72,12 @@ class WordsLearningViewModel
                 .doOnSubscribe { timer.startTimer() }
                 .subscribe(
                         {
-                            timer.stopTimer("VIEWMODEL")
-                            Timber.d("saveAllWordsRoom success")
+                            timer.stopTimer("VIEWMODEL save")
+                            Timber.d("saveAllWords success")
                         },
                         {
-                            Timber.d("saveAllWordsRoom error mes: ${it.message}")
-                            Timber.d("saveAllWordsRoom error loc: ${it.localizedMessage}")
+                            Timber.d("saveAllWords error mes: ${it.message}")
+                            Timber.d("saveAllWords error loc: ${it.localizedMessage}")
                         }
                 )
     }

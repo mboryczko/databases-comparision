@@ -1,6 +1,7 @@
 package pl.michalboryczko.exercise.app
 
 import androidx.multidex.MultiDex
+import com.couchbase.lite.CouchbaseLite
 import com.facebook.stetho.Stetho
 import com.google.firebase.FirebaseApp
 import dagger.android.AndroidInjector
@@ -20,6 +21,7 @@ class MainApplication: DaggerApplication() {
         Timber.plant(CustomLoggingTree())
         Stetho.initializeWithDefaults(this)
         Realm.init(this)
+        CouchbaseLite.init(this)
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {

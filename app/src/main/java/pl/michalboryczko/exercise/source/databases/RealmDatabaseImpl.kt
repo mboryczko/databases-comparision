@@ -18,9 +18,7 @@ class RealmDatabaseImpl: DatabaseOperations(){
 
         val output = mutableListOf<Translate>()
         resultRealm.forEach { output.add(Translate(it.english, it.spanish)) }
-        return Single.create<List<Translate>> { emitter ->
-            emitter.onSuccess(output)
-        }
+        return Single.defer { Single.just(output) }
     }
 
     override fun saveAllWords(words: List<Translate>): Completable {
@@ -31,7 +29,7 @@ class RealmDatabaseImpl: DatabaseOperations(){
         return Completable.create {completable->
             realm.executeTransactionAsync(
                     { bgRealm ->
-                        bgRealm.insert(realmList)
+                        bgRealm.insertOrUpdate(realmList)
                     },
                     {
                         completable.onComplete()
