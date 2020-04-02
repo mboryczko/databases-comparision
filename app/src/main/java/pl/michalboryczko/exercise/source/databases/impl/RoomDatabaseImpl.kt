@@ -4,14 +4,21 @@ import android.os.Looper
 import io.reactivex.Completable
 import io.reactivex.Single
 import pl.michalboryczko.exercise.model.database.room.RoomDatabase
+import pl.michalboryczko.exercise.model.database.room.convertToTranslate
 import pl.michalboryczko.exercise.model.database.room.convertToTranslateRoomList
 import pl.michalboryczko.exercise.model.presentation.Translate
 import pl.michalboryczko.exercise.source.databases.DatabaseOperations
 import timber.log.Timber
 
 class RoomDatabaseImpl(val roomDatabase: RoomDatabase) : DatabaseOperations(){
-    override fun fetchAllWords(): Single<List<Translate>> {
 
+
+    override fun searchWords(text: String): Single<List<Translate>> {
+        //todo
+        return Single.just(listOf())
+    }
+
+    override fun fetchAllWords(): Single<List<Translate>> {
         Timber.d("room fetchAllWords MAINTHREAD: ${Looper.myLooper() == Looper.getMainLooper()}")
         return roomDatabase
                 .translateDAO()
@@ -23,7 +30,7 @@ class RoomDatabaseImpl(val roomDatabase: RoomDatabase) : DatabaseOperations(){
                 }
                 .toObservable()
                 .flatMapIterable { it }
-                .map { Translate(it.english, it.spanish) }
+                .map { it.convertToTranslate()}
                 .toList()
     }
 

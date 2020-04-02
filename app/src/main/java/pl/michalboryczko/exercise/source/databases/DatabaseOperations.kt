@@ -9,6 +9,7 @@ abstract class DatabaseOperations {
     protected val timer = ExecutionTimer()
 
     abstract fun fetchAllWords(): Single<List<Translate>>
+    abstract fun searchWords(text: String): Single<List<Translate>>
     abstract fun saveAllWords(words: List<Translate>): Completable
 
 

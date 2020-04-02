@@ -10,6 +10,9 @@ import io.realm.Realm
 import pl.michalboryczko.exercise.di.DaggerAppComponent
 import pl.michalboryczko.exercise.model.database.objectbox.ObjectBox
 import timber.log.Timber
+import io.realm.RealmConfiguration
+
+
 
 
 class MainApplication: DaggerApplication() {
@@ -22,6 +25,12 @@ class MainApplication: DaggerApplication() {
         Timber.plant(CustomLoggingTree())
         Stetho.initializeWithDefaults(this)
         Realm.init(this)
+        val config = RealmConfiguration.Builder()
+                .name("myrealm.realm")
+                .deleteRealmIfMigrationNeeded()
+                .build()
+        Realm.setDefaultConfiguration(config)
+
         CouchbaseLite.init(this)
         ObjectBox.init(this);
     }

@@ -1,4 +1,4 @@
-package pl.michalboryczko.exercise.ui.learnwords
+package pl.michalboryczko.exercise.ui.search
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
@@ -28,7 +28,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.random.Random
 
-class WordsLearningViewModel
+class SearchViewModel
 @Inject constructor(
         private val userRepository: UserRepository,
         private val repository: Repository,
@@ -36,56 +36,36 @@ class WordsLearningViewModel
         @Named(MAIN_SCHEDULER) private val mainScheduler: Scheduler
 ) : BaseViewModel(userRepository) {
 
-    val status: MutableLiveData<Resource<Int>> = MutableLiveData()
-    lateinit var words: List<Translate>
-    val currentTranslation: MutableLiveData<Translate> = MutableLiveData()
+    val words: MutableLiveData<List<Translate>> = MutableLiveData()
 
     init {
-        words =  WordParser.parseWords("dictionary.txt")
+        searchWords("")
     }
 
-    fun checkCurrentTranslation(){
-
+    fun onTextChanged(word: String){
+        searchWords(word)
     }
 
-    fun getWordsFromDb(){
+    fun searchWords(text: String){
         val timer = ExecutionTimer()
-        disposables +=
-                Single.just(true)
-                .flatMap { userRepository.getAllWords() }
-                .subscribeOn(computationScheduler)
-                .observeOn(computationScheduler)
-                .doOnSubscribe { timer.startTimer() }
-                .subscribe(
-                        {
-                            timer.stopTimer("VIEWMODEL get")
-                            Timber.d("getWordsFromDb count: ${it.count()}")
-                        },
-                        {
-                            Timber.d("getWordsFromDb error mes: ${it.message}")
-                            Timber.d("getWordsFromDb error loc: ${it.localizedMessage}")
-                        }
-                )
-    }
-
-    fun saveWordsToDb(){
-        val timer = ExecutionTimer()
-        disposables += userRepository
-                .saveAllWords(words)
+        disposables += userRepository.searchWordsToLearn(text)
                 .subscribeOn(computationScheduler)
                 .observeOn(mainScheduler)
                 .doOnSubscribe { timer.startTimer() }
                 .subscribe(
                         {
-                            timer.stopTimer("VIEWMODEL save")
-                            Timber.d("saveAllWords success")
+                            timer.stopTimer("searchWords get")
+                            words.value = it
+                            Timber.d("searchWords count: ${it.count()}")
+                            if(it.count() >= 1)
+                                Timber.d("searchWords first two : ${it[0]} ")
                         },
                         {
-                            Timber.d("saveAllWords error mes: ${it.message}")
-                            Timber.d("saveAllWords error loc: ${it.localizedMessage}")
+                            Timber.d("searchWords error mes: ${it.message}")
                         }
                 )
     }
+
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     fun onResume() {

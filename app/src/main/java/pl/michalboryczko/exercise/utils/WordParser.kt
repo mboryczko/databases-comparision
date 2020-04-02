@@ -14,7 +14,7 @@ class WordParser{
             val downlaodDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
             File(downlaodDirectory, fileName).forEachLine { line->
                 val words = line.split(" ")
-                translates.add(Translate(words[2], words[4]))
+                translates.add(Translate(translates.size.toLong(), words[4], words[2],  0, 0, false))
             }
 
             Timber.d("words parse processing END")
@@ -29,7 +29,7 @@ class WordParser{
             val downlaodDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
             val lines = File(downlaodDirectory, fileName).readLines()
             while(i < lines.size){
-                translates.add(Translate(lines[i], lines[i+1]))
+                translates.add(Translate(translates.size.toLong(), lines[i], lines[i+1], 0, 0, false))
                 i += 4
             }
 

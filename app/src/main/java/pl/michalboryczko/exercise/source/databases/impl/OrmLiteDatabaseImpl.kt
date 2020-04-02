@@ -6,6 +6,7 @@ import io.reactivex.Single
 import pl.michalboryczko.exercise.model.presentation.Translate
 import pl.michalboryczko.exercise.model.database.ormlite.OrmLiteDBHelper
 import pl.michalboryczko.exercise.model.database.ormlite.TranslateOrmLite
+import pl.michalboryczko.exercise.model.database.ormlite.convertToTranslate
 import pl.michalboryczko.exercise.model.database.ormlite.convertToTranslateOrmLiteList
 import pl.michalboryczko.exercise.source.databases.DatabaseOperations
 import timber.log.Timber
@@ -13,6 +14,12 @@ import java.sql.SQLException
 
 
 class OrmLiteDatabaseImpl(val ormLiteDbHelper: OrmLiteDBHelper): DatabaseOperations(){
+
+
+    override fun searchWords(text: String): Single<List<Translate>> {
+        //todo
+        return Single.just(listOf())
+    }
 
     override fun fetchAllWords(): Single<List<Translate>>{
         timer.startTimer()
@@ -26,7 +33,7 @@ class OrmLiteDatabaseImpl(val ormLiteDbHelper: OrmLiteDBHelper): DatabaseOperati
         timer.stopTimer("ormLiteDatabaseImpl fetchAllWords")
 
         val output = mutableListOf<Translate>()
-        translatesOrmLite.forEach { output.add(Translate(it.english, it.spanish)) }
+        translatesOrmLite.forEach { output.add(it.convertToTranslate()) }
 
         return Single.create<List<Translate>> { emitter ->
             emitter.onSuccess(output)

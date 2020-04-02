@@ -1,4 +1,4 @@
-package pl.michalboryczko.exercise.ui.learnwords
+package pl.michalboryczko.exercise.ui.markwords
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
@@ -7,7 +7,9 @@ import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.realm.Realm
 import io.realm.RealmList
+import pl.michalboryczko.exercise.R
 import pl.michalboryczko.exercise.app.BaseViewModel
+import pl.michalboryczko.exercise.model.base.Event
 import pl.michalboryczko.exercise.model.base.Resource
 import pl.michalboryczko.exercise.model.database.realm.DoctorRealm
 import pl.michalboryczko.exercise.model.database.realm.Specialization
@@ -15,7 +17,10 @@ import pl.michalboryczko.exercise.model.database.realm.TranslateRealm
 import pl.michalboryczko.exercise.model.database.realm.convertToTranslateRealmList
 import pl.michalboryczko.exercise.model.database.room.TranslateRoom
 import pl.michalboryczko.exercise.model.database.room.convertToTranslateRoomList
+import pl.michalboryczko.exercise.model.presentation.MarkTranslate
 import pl.michalboryczko.exercise.model.presentation.Translate
+import pl.michalboryczko.exercise.model.presentation.convertToMarkTranslate
+import pl.michalboryczko.exercise.model.presentation.convertToTranslate
 import pl.michalboryczko.exercise.source.databases.impl.RealmDatabaseImpl
 import pl.michalboryczko.exercise.source.repository.Repository
 import pl.michalboryczko.exercise.source.repository.UserRepository
@@ -28,7 +33,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.random.Random
 
-class WordsLearningViewModel
+class MarkWordsViewModel
 @Inject constructor(
         private val userRepository: UserRepository,
         private val repository: Repository,
@@ -36,56 +41,52 @@ class WordsLearningViewModel
         @Named(MAIN_SCHEDULER) private val mainScheduler: Scheduler
 ) : BaseViewModel(userRepository) {
 
-    val status: MutableLiveData<Resource<Int>> = MutableLiveData()
-    lateinit var words: List<Translate>
-    val currentTranslation: MutableLiveData<Translate> = MutableLiveData()
+    val words: MutableLiveData<List<MarkTranslate>> = MutableLiveData()
 
     init {
-        words =  WordParser.parseWords("dictionary.txt")
+        searchWords("")
     }
 
-    fun checkCurrentTranslation(){
-
+    fun onTextChanged(word: String){
+        searchWords(word)
     }
 
-    fun getWordsFromDb(){
+    fun addToLearningList(words: List<MarkTranslate>){
         val timer = ExecutionTimer()
-        disposables +=
-                Single.just(true)
-                .flatMap { userRepository.getAllWords() }
-                .subscribeOn(computationScheduler)
-                .observeOn(computationScheduler)
-                .doOnSubscribe { timer.startTimer() }
-                .subscribe(
-                        {
-                            timer.stopTimer("VIEWMODEL get")
-                            Timber.d("getWordsFromDb count: ${it.count()}")
-                        },
-                        {
-                            Timber.d("getWordsFromDb error mes: ${it.message}")
-                            Timber.d("getWordsFromDb error loc: ${it.localizedMessage}")
-                        }
-                )
-    }
-
-    fun saveWordsToDb(){
-        val timer = ExecutionTimer()
-        disposables += userRepository
-                .saveAllWords(words)
+        val list = words.map { it.convertToTranslate() }
+        disposables += userRepository.updateAsLearning(list)
                 .subscribeOn(computationScheduler)
                 .observeOn(mainScheduler)
                 .doOnSubscribe { timer.startTimer() }
                 .subscribe(
                         {
-                            timer.stopTimer("VIEWMODEL save")
-                            Timber.d("saveAllWords success")
+                            toastInfoResource.value = Event(R.string.added_to_learning_list)
+                            timer.stopTimer("addToLearningList")
                         },
                         {
-                            Timber.d("saveAllWords error mes: ${it.message}")
-                            Timber.d("saveAllWords error loc: ${it.localizedMessage}")
+                            Timber.d("addToLearningList error mes: ${it.message}")
                         }
                 )
     }
+
+    fun searchWords(text: String){
+        val timer = ExecutionTimer()
+        disposables += userRepository.searchWords(text)
+                .subscribeOn(computationScheduler)
+                .observeOn(mainScheduler)
+                .doOnSubscribe { timer.startTimer() }
+                .subscribe(
+                        {
+                            timer.stopTimer("searchWords get")
+                            words.value = it.map { it.convertToMarkTranslate() }
+                            Timber.d("searchWords count: ${it.count()}")
+                        },
+                        {
+                            Timber.d("searchWords error mes: ${it.message}")
+                        }
+                )
+    }
+
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     fun onResume() {

@@ -4,11 +4,15 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.Observer
+import kotlinx.android.synthetic.main.activity_main.*
 import pl.michalboryczko.exercise.R
 import pl.michalboryczko.exercise.app.BaseActivity
-import pl.michalboryczko.exercise.model.api.call.LoginCall
-import pl.michalboryczko.exercise.model.base.Status
-import timber.log.Timber
+import androidx.fragment.app.Fragment
+import pl.michalboryczko.exercise.ui.learnwords.WordsLearningFragment
+import pl.michalboryczko.exercise.ui.markwords.MarkWordsFragment
+import pl.michalboryczko.exercise.ui.search.SearchFragment
+import pl.michalboryczko.exercise.ui.settings.SettingsFragment
+
 
 class MainActivity : BaseActivity<MainViewModel>() {
 
@@ -21,6 +25,7 @@ class MainActivity : BaseActivity<MainViewModel>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         registerListeners()
+        initialize()
     }
 
     fun registerListeners(){
@@ -30,6 +35,25 @@ class MainActivity : BaseActivity<MainViewModel>() {
         viewModel.words.observe(this, Observer {words->
             //Timber.d("words ${words[0].english} ${words[0].spanish}")
         })
+    }
+
+    fun initialize(){
+        bottomNavigationView.setOnNavigationItemSelectedListener {item->
+            when(item.itemId){
+                R.id.menu_home -> openFragment(WordsLearningFragment())
+                R.id.menu_search -> openFragment(SearchFragment())
+                R.id.menu_todo -> openFragment(MarkWordsFragment())
+            }
+
+            true
+        }
+    }
+
+    fun openFragment(fragment: Fragment) {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.container, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 
     override fun initViewModel() {

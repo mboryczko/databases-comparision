@@ -10,6 +10,11 @@ import timber.log.Timber
 
 class CouchbaseDatabaseImpl(val database: Database): DatabaseOperations(){
 
+    override fun searchWords(text: String): Single<List<Translate>> {
+        //todo
+        return Single.just(listOf())
+    }
+
     override fun fetchAllWords(): Single<List<Translate>>{
         timer.startTimer()
         val query = QueryBuilder.select(SelectResult.all())
@@ -29,12 +34,12 @@ class CouchbaseDatabaseImpl(val database: Database): DatabaseOperations(){
         }
 
         val output = mutableListOf<Translate>()
-        result.allResults().forEach {
+        result.allResults().forEachIndexed { index, it ->
             Timber.d("couchdatabase r: ${it.toString()} eng: ${it.getString("english")} ${it.keys}")
             val english = it.getString("english")
             val spanish = it.getString("spanish")
             if(english != null && spanish != null){
-                output.add(Translate(english, spanish))
+                output.add(Translate(index.toLong(), english, spanish, 0, 0, false))
             }
         }
 

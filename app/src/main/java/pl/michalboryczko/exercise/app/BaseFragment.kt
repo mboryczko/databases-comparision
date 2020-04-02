@@ -30,8 +30,6 @@ abstract class BaseFragment<T: BaseViewModel>  : DaggerFragment() {
         observeToastMessage()
     }
 
-
-
     abstract fun initViewModel()
 
     fun observeToastMessage(){

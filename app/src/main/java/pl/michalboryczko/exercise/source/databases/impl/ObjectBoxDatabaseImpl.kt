@@ -6,6 +6,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import pl.michalboryczko.exercise.model.database.objectbox.ObjectBox
 import pl.michalboryczko.exercise.model.database.objectbox.TranslateObjectBox
+import pl.michalboryczko.exercise.model.database.objectbox.convertToTranslate
 import pl.michalboryczko.exercise.model.database.objectbox.convertToTranslateObjectBoxLiteList
 import pl.michalboryczko.exercise.model.presentation.Translate
 import pl.michalboryczko.exercise.source.databases.DatabaseOperations
@@ -15,13 +16,19 @@ import timber.log.Timber
 class ObjectBoxDatabaseImpl(): DatabaseOperations(){
     val wordsBox: Box<TranslateObjectBox> = ObjectBox.boxStore.boxFor()
 
+
+    override fun searchWords(text: String): Single<List<Translate>> {
+        //todo
+        return Single.just(listOf())
+    }
+
     override fun fetchAllWords(): Single<List<Translate>>{
         timer.startTimer()
         val words: List<TranslateObjectBox> = wordsBox.query().build().find()
         timer.stopTimer("objectbox fetchAllWords")
 
         val output = mutableListOf<Translate>()
-        words.forEach { output.add(Translate(it.english, it.spanish)) }
+        words.forEach { output.add(it.convertToTranslate()) }
 
         Timber.d("objectbox size fetched: ${output.size}")
         return Single.just(output)

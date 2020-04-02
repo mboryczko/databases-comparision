@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.learnwords.WordsLearningFragment">
+
+    <EditText
+        android:id="@+id/searchEditText"
+        android:drawableStart="@drawable/ic_search_gray"
+        android:background="@drawable/white_rounded_rectangle"
+        android:hint="@string/search_hint"
+        android:padding="8dp"
+        android:layout_margin="16dp"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/searchWordsRecycler"
+        tools:listitem="@layout/translation_item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+</LinearLayout>

@@ -12,18 +12,33 @@ open class TranslateOrmLite(
         @DatabaseField(canBeNull = false)
         var english: String = "",
         @DatabaseField(canBeNull = false)
-        var spanish: String = ""
+        var spanish: String = "",
+        @DatabaseField(canBeNull = false)
+        var timesAnsweredRight: Int = 0,
+        @DatabaseField(canBeNull = false)
+        var timesAnsweredWrong: Int = 0,
+        @DatabaseField(canBeNull = false)
+        var shouldBeLearned: Boolean = false
 )
 
 fun TranslateOrmLite.convertToTranslate(): Translate{
-    return Translate(this.english, this.spanish)
+    return Translate(this.id, this.english, this.spanish, this.timesAnsweredRight, this.timesAnsweredWrong, this.shouldBeLearned)
 }
 
 
 fun List<Translate>.convertToTranslateOrmLiteList(): List<TranslateOrmLite>{
     val translateRoomList = mutableListOf<TranslateOrmLite>()
     this.forEachIndexed{ index, translate ->
-        translateRoomList.add(TranslateOrmLite(id = index.toLong(), english = translate.english, spanish = translate.spanish))
+        translateRoomList.add(
+                TranslateOrmLite(
+                        id = translate.id,
+                        english = translate.english,
+                        spanish = translate.spanish,
+                        timesAnsweredRight = 0,
+                        timesAnsweredWrong = 0,
+                        shouldBeLearned = false
+                )
+        )
     }
 
     return translateRoomList

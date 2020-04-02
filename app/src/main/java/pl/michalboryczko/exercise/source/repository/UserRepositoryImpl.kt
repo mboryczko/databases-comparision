@@ -1,6 +1,7 @@
 package pl.michalboryczko.exercise.source.repository
 
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import pl.michalboryczko.exercise.model.presentation.Translate
@@ -30,13 +31,29 @@ class UserRepositoryImpl (
                 .andThen(realm.saveAllWords(words))
                 .andThen(ormLite.saveAllWords(words))*/
 
-        return Completable.defer { objectBox.saveAllWords(words) }
+        /*return Completable.defer { objectBox.saveAllWords(words) }
                 .andThen(room.saveAllWords(words))
                 .observeOn(AndroidSchedulers.mainThread())
                 //.andThen{ ormLite.saveAllWords(words) }
-                .andThen(realm.saveAllWords(words) )
+                .andThen(realm.saveAllWords(words) )*/
+
+        return Completable.defer { realm.saveAllWords(words) }
 
         //return ormLite.saveAllWords(words)
     }
 
+    override fun searchWords(text: String): Single<List<Translate>> {
+        return Single.defer { realm.searchWords(text) }
+    }
+
+    override fun searchWordsToLearn(text: String): Flowable<List<Translate>> {
+        return realm.searchWordsToLearn(text)
+    }
+
+    override fun updateAsLearning(words: List<Translate>): Completable {
+        return Completable.defer {
+            val marked = words.map { it.apply { it.shouldBeLearned = true } }
+            realm.updateWords(marked)
+        }
+    }
 }
