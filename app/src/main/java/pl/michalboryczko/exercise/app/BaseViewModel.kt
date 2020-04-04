@@ -57,7 +57,7 @@ abstract class BaseViewModel(
     override fun onCleared() {
         super.onCleared()
         disposables
-                .filter { it.isDisposed }
+                .filter { !it.isDisposed }
                 .forEach { it.dispose() }
     }
 

@@ -36,6 +36,7 @@ class MarkWordsAdapter(
         holder.apply {
             englishTextView.text = item.translate.english
             spanishTextView.text = item.translate.spanish
+            numberTextView.text = (position + 1).toString()
             wordCheckbox.isChecked = item.isMarked
         }
     }
@@ -44,6 +45,7 @@ class MarkWordsAdapter(
         val englishTextView = view.englishTextView
         val spanishTextView = view.spanishTextView
         val wordCheckbox = view.wordCheckbox
+        val numberTextView = view.numberTextView
         val wholeRow = view.wholeRow
 
         init {

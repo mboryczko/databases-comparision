@@ -21,21 +21,30 @@
 
 
     <!--menu-->
-    <string name="home_menu">Home</string>
+    <string name="home_menu">Learn</string>
     <string name="search_menu">Search</string>
-    <string name="todo_menu">TODO</string>
+    <string name="settings_menu">Set words to learn</string>
     <string name="login_button">Login</string>
 
 
     <!--search-->
     <string name="search_hint">Search... </string>
+    <string name="search_menu_to_learn">TO LEARN</string>
+    <string name="search_menu_learned">LEARNED</string>
+    <string name="search_menu_all">ALL</string>
+
+    <!--test-->
+    <string name="test_hint">Translate here</string>
+    <string name="check">check</string>
+    <string name="next">next</string>
 
 
-    <!--mark words-->
+    <!--mark wordsToLearn-->
     <string name="select_all">Select all</string>
     <string name="selecte_to_learn">Add to learning list</string>
     <string name="delete_word">Delete permanently</string>
     <string name="added_to_learning_list">Successfully added to learning list</string>
+    <string name="deleted">Successfully deleted</string>
 
 
     <!--session-->

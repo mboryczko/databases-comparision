@@ -51,6 +51,25 @@ class MarkWordsViewModel
         searchWords(word)
     }
 
+    fun deleteWords(words: List<MarkTranslate>){
+        val timer = ExecutionTimer()
+        val list = words.map { it.convertToTranslate() }
+        disposables += userRepository.deleteWords(list)
+                .subscribeOn(computationScheduler)
+                .observeOn(mainScheduler)
+                .doOnSubscribe { timer.startTimer() }
+                .subscribe(
+                        {
+                            toastInfoResource.value = Event(R.string.delete_word)
+                            timer.stopTimer("deleteWords")
+                            searchWords("")
+                        },
+                        {
+                            Timber.d("addToLearningList error mes: ${it.message}")
+                        }
+                )
+    }
+
     fun addToLearningList(words: List<MarkTranslate>){
         val timer = ExecutionTimer()
         val list = words.map { it.convertToTranslate() }
@@ -77,12 +96,12 @@ class MarkWordsViewModel
                 .doOnSubscribe { timer.startTimer() }
                 .subscribe(
                         {
-                            timer.stopTimer("searchWords get")
+                            timer.stopTimer("searchWordsToLearn get")
                             words.value = it.map { it.convertToMarkTranslate() }
-                            Timber.d("searchWords count: ${it.count()}")
+                            Timber.d("searchWordsToLearn count: ${it.count()}")
                         },
                         {
-                            Timber.d("searchWords error mes: ${it.message}")
+                            Timber.d("searchWordsToLearn error mes: ${it.message}")
                         }
                 )
     }

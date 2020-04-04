@@ -4,30 +4,19 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.OnLifecycleEvent
 import io.reactivex.Scheduler
-import io.reactivex.Single
-import io.realm.Realm
-import io.realm.RealmList
 import pl.michalboryczko.exercise.app.BaseViewModel
-import pl.michalboryczko.exercise.model.base.Resource
-import pl.michalboryczko.exercise.model.database.realm.DoctorRealm
-import pl.michalboryczko.exercise.model.database.realm.Specialization
-import pl.michalboryczko.exercise.model.database.realm.TranslateRealm
-import pl.michalboryczko.exercise.model.database.realm.convertToTranslateRealmList
-import pl.michalboryczko.exercise.model.database.room.TranslateRoom
-import pl.michalboryczko.exercise.model.database.room.convertToTranslateRoomList
 import pl.michalboryczko.exercise.model.presentation.Translate
-import pl.michalboryczko.exercise.source.databases.impl.RealmDatabaseImpl
 import pl.michalboryczko.exercise.source.repository.Repository
 import pl.michalboryczko.exercise.source.repository.UserRepository
 import pl.michalboryczko.exercise.utils.Constants.Companion.COMPUTATION_SCHEDULER
 import pl.michalboryczko.exercise.utils.Constants.Companion.MAIN_SCHEDULER
 import pl.michalboryczko.exercise.utils.ExecutionTimer
-import pl.michalboryczko.exercise.utils.WordParser
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.random.Random
+import javax.inject.Singleton
 
+@Singleton
 class SearchViewModel
 @Inject constructor(
         private val userRepository: UserRepository,
@@ -36,17 +25,44 @@ class SearchViewModel
         @Named(MAIN_SCHEDULER) private val mainScheduler: Scheduler
 ) : BaseViewModel(userRepository) {
 
-    val words: MutableLiveData<List<Translate>> = MutableLiveData()
+    val wordsToLearn: MutableLiveData<List<Translate>> = MutableLiveData()
+    val wordsLearned: MutableLiveData<List<Translate>> = MutableLiveData()
 
     init {
-        searchWords("")
+        searchWordsToLearn("")
+        searchLearnedWords("")
     }
 
-    fun onTextChanged(word: String){
-        searchWords(word)
+    fun onTextChanged(word: String, toLearn: Boolean){
+        if(toLearn){
+            searchWordsToLearn(word)
+        }else{
+            searchLearnedWords(word)
+        }
     }
 
-    fun searchWords(text: String){
+    fun searchLearnedWords(text: String){
+        val timer = ExecutionTimer()
+        disposables += userRepository.searchLearnedWords(text)
+                .subscribeOn(computationScheduler)
+                .observeOn(mainScheduler)
+                .doOnSubscribe { timer.startTimer() }
+                .subscribe(
+                        {
+                            timer.stopTimer("searchLearnedWords get")
+                            wordsLearned.value = it
+                            Timber.d("searchLearnedWords count: ${it.count()}")
+                            if(it.count() >= 1)
+                                Timber.d("searchLearnedWords first two : ${it[0]} ")
+                        },
+                        {
+                            Timber.d("searchLearnedWords error mes: ${it.message}")
+                        }
+                )
+    }
+
+
+    fun searchWordsToLearn(text: String){
         val timer = ExecutionTimer()
         disposables += userRepository.searchWordsToLearn(text)
                 .subscribeOn(computationScheduler)
@@ -54,14 +70,14 @@ class SearchViewModel
                 .doOnSubscribe { timer.startTimer() }
                 .subscribe(
                         {
-                            timer.stopTimer("searchWords get")
-                            words.value = it
-                            Timber.d("searchWords count: ${it.count()}")
+                            timer.stopTimer("searchWordsToLearn get")
+                            wordsToLearn.value = it
+                            Timber.d("searchWordsToLearn count: ${it.count()}")
                             if(it.count() >= 1)
-                                Timber.d("searchWords first two : ${it[0]} ")
+                                Timber.d("searchWordsToLearn first two : ${it[0]} ")
                         },
                         {
-                            Timber.d("searchWords error mes: ${it.message}")
+                            Timber.d("searchWordsToLearn error mes: ${it.message}")
                         }
                 )
     }

@@ -5,7 +5,7 @@ data class Translate(
         val id: Long,
         val english: String,
         val spanish: String,
-        val timesAnsweredRight: Int,
+        var timesAnsweredRight: Int,
         val timesAnsweredWrong: Int,
         var shouldBeLearned: Boolean
 )

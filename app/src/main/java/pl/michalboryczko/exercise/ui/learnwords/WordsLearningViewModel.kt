@@ -8,6 +8,7 @@ import io.reactivex.Single
 import io.realm.Realm
 import io.realm.RealmList
 import pl.michalboryczko.exercise.app.BaseViewModel
+import pl.michalboryczko.exercise.model.base.Event
 import pl.michalboryczko.exercise.model.base.Resource
 import pl.michalboryczko.exercise.model.database.realm.DoctorRealm
 import pl.michalboryczko.exercise.model.database.realm.Specialization
@@ -36,19 +37,65 @@ class WordsLearningViewModel
         @Named(MAIN_SCHEDULER) private val mainScheduler: Scheduler
 ) : BaseViewModel(userRepository) {
 
-    val status: MutableLiveData<Resource<Int>> = MutableLiveData()
-    lateinit var words: List<Translate>
     val currentTranslation: MutableLiveData<Translate> = MutableLiveData()
+    val correctAnswear: MutableLiveData<Boolean> = MutableLiveData()
+    val wrongAnswear: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
-        words =  WordParser.parseWords("dictionary.txt")
-    }
-
-    fun checkCurrentTranslation(){
 
     }
 
-    fun getWordsFromDb(){
+    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+    fun onResume() {
+        getNextWord()
+    }
+
+    fun onCheckClicked(word: String){
+        if(currentTranslation.value!!.spanish == word){
+            correctAnswear.value = true
+            markWordAnsweredRight()
+        }else{
+            wrongAnswear.value = true
+        }
+    }
+
+    fun getNextWord(){
+        disposables +=  userRepository.searchWordsToLearn()
+                .subscribeOn(computationScheduler)
+                .observeOn(mainScheduler)
+                .subscribe(
+                        {
+                            currentTranslation.value = it.random()
+                            it.forEach {
+                                Timber.d("getNextWord word: ${it}")
+                            }
+                        },
+                        {
+                            Timber.d("getNextWord error mes: ${it.message}")
+                            Timber.d("getNextWord error loc: ${it.localizedMessage}")
+                        }
+                )
+    }
+
+    fun markWordAnsweredRight(){
+        val word = currentTranslation.value
+        word?.let {
+            disposables += userRepository.updateAsAnsweredRight(word)
+                    .subscribeOn(computationScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribe(
+                            {
+                                Timber.d("updateAsAnsweredRight success")
+                            },
+                            {
+                                Timber.d("updateAsAnsweredRight error mes: ${it.message}")
+                            }
+                    )
+        }
+    }
+
+
+    /*fun getWordsFromDb(){
         val timer = ExecutionTimer()
         disposables +=
                 Single.just(true)
@@ -71,7 +118,7 @@ class WordsLearningViewModel
     fun saveWordsToDb(){
         val timer = ExecutionTimer()
         disposables += userRepository
-                .saveAllWords(words)
+                .saveAllWords(wordsToLearn)
                 .subscribeOn(computationScheduler)
                 .observeOn(mainScheduler)
                 .doOnSubscribe { timer.startTimer() }
@@ -85,11 +132,7 @@ class WordsLearningViewModel
                             Timber.d("saveAllWords error loc: ${it.localizedMessage}")
                         }
                 )
-    }
+    }*/
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    fun onResume() {
-
-    }
 
 }

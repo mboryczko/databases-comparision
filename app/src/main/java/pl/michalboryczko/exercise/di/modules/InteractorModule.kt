@@ -68,6 +68,7 @@ class InteractorModule {
 
     @Provides
     fun provideUserRepository(
+            api: Api,
             room: RoomDatabaseImpl,
             realm: RealmDatabaseImpl,
             couchbase: CouchbaseDatabaseImpl,
@@ -75,7 +76,7 @@ class InteractorModule {
             objectBoxDatabaseImpl: ObjectBoxDatabaseImpl,
             checker: InternetConnectivityChecker
     ): UserRepository {
-        return UserRepositoryImpl(room, realm, couchbase, ormLiteDatabaseImpl, objectBoxDatabaseImpl,  checker)
+        return UserRepositoryImpl(api, room, realm, couchbase, ormLiteDatabaseImpl, objectBoxDatabaseImpl,  checker)
     }
 
 }

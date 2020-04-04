@@ -5,7 +5,7 @@ import com.j256.ormlite.table.DatabaseTable
 import pl.michalboryczko.exercise.model.presentation.Translate
 
 
-@DatabaseTable(tableName = "words")
+@DatabaseTable(tableName = "wordsToLearn")
 open class TranslateOrmLite(
         @DatabaseField(generatedId = true)
         var id: Long = 0,

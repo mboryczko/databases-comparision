@@ -13,8 +13,11 @@ import pl.michalboryczko.exercise.ui.markwords.MarkWordsFragment
 import pl.michalboryczko.exercise.ui.markwords.MarkWordsViewModel
 import pl.michalboryczko.exercise.ui.search.SearchFragment
 import pl.michalboryczko.exercise.ui.search.SearchViewModel
+import pl.michalboryczko.exercise.ui.search.pager.WordsLearnedFragment
+import pl.michalboryczko.exercise.ui.search.pager.WordsToLearnFragment
 import pl.michalboryczko.exercise.ui.settings.SettingsFragment
 import pl.michalboryczko.exercise.ui.settings.SettingsViewModel
+import pl.michalboryczko.exercise.ui.test.TestFragment
 
 @Module
 internal abstract class FragmentModule {
@@ -30,6 +33,10 @@ internal abstract class FragmentModule {
     @ContributesAndroidInjector()
     internal abstract fun bindWordsLearningFragment(): WordsLearningFragment
 
+
+    @ContributesAndroidInjector()
+    internal abstract fun bindTestFragment(): TestFragment
+
     @Binds
     @IntoMap
     @ViewModelKey(WordsLearningViewModel::class)
@@ -37,6 +44,12 @@ internal abstract class FragmentModule {
 
     @ContributesAndroidInjector()
     internal abstract fun bindSearchFragment(): SearchFragment
+
+    @ContributesAndroidInjector()
+    internal abstract fun bindWordsLearnedFragment(): WordsLearnedFragment
+
+    @ContributesAndroidInjector()
+    internal abstract fun bindWordsToLearnFragment(): WordsToLearnFragment
 
     @Binds
     @IntoMap

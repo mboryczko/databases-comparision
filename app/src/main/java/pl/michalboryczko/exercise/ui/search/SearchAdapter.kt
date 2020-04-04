@@ -26,12 +26,14 @@ class SearchAdapter(
         holder.apply {
             englishTextView.text = item.english
             spanishTextView.text = item.spanish
+            numberTextView.text = (position + 1).toString()
         }
     }
 
     inner class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         val englishTextView = view.englishTextView
         val spanishTextView = view.spanishTextView
+        val numberTextView = view.numberTextView
 
         init {
 

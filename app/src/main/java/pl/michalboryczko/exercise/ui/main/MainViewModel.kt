@@ -8,6 +8,7 @@ import pl.michalboryczko.exercise.source.api.InternetConnectivityChecker
 import pl.michalboryczko.exercise.source.repository.UserRepository
 import pl.michalboryczko.exercise.utils.Constants.Companion.COMPUTATION_SCHEDULER
 import pl.michalboryczko.exercise.utils.Constants.Companion.MAIN_SCHEDULER
+import pl.michalboryczko.exercise.utils.ExecutionTimer
 import pl.michalboryczko.exercise.utils.WordParser.Companion.parseSentences
 import pl.michalboryczko.exercise.utils.WordParser.Companion.parseWords
 import timber.log.Timber
@@ -27,10 +28,27 @@ class MainViewModel
     val sentences: MutableLiveData<List<Translate>> = MutableLiveData()
 
     init {
+        //wordsToLearn.value = parseWords("dictionary.txt")
+        //sentences.value = parseSentences("sentences.txt")
 
-        words.value = parseWords("dictionary.txt")
-        sentences.value = parseSentences("sentences.txt")
-        //Timber.d("end processing")
+        val timer = ExecutionTimer()
+        disposables +=
+                userRepository.getAllWords()
+                .subscribeOn(computationScheduler)
+                .observeOn(mainScheduler)
+                .doOnSubscribe { timer.startTimer() }
+                .subscribe(
+                        {
+                            timer.stopTimer("getAllWords MainViewModel")
+                            words.value = it
+                            Timber.d("getAllWords MainViewModel count: ${it.count()}")
+                            if(it.count() >= 1)
+                                Timber.d("getAllWords MainViewModel first two : ${it[0]} ")
+                        },
+                        {
+                            Timber.d("getAllWords MainViewModel error mes: ${it.message}")
+                        }
+                )
     }
 
 }

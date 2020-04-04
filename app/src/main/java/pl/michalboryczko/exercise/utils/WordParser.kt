@@ -10,14 +10,14 @@ class WordParser{
     companion object {
         fun parseWords(fileName: String): List<Translate>{
             val translates = mutableListOf<Translate>()
-            //Timber.d("words parse processing")
+            //Timber.d("wordsToLearn parse processing")
             val downlaodDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
             File(downlaodDirectory, fileName).forEachLine { line->
                 val words = line.split(" ")
                 translates.add(Translate(translates.size.toLong(), words[4], words[2],  0, 0, false))
             }
 
-            Timber.d("words parse processing END")
+            Timber.d("wordsToLearn parse processing END")
             return translates
         }
 

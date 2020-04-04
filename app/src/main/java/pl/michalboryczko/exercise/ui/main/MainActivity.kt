@@ -12,6 +12,7 @@ import pl.michalboryczko.exercise.ui.learnwords.WordsLearningFragment
 import pl.michalboryczko.exercise.ui.markwords.MarkWordsFragment
 import pl.michalboryczko.exercise.ui.search.SearchFragment
 import pl.michalboryczko.exercise.ui.settings.SettingsFragment
+import pl.michalboryczko.exercise.ui.test.TestFragment
 
 
 class MainActivity : BaseActivity<MainViewModel>() {
@@ -33,7 +34,7 @@ class MainActivity : BaseActivity<MainViewModel>() {
             //Timber.d("sentences ${sentences[0].english} ${sentences[0].spanish}")
         })
         viewModel.words.observe(this, Observer {words->
-            //Timber.d("words ${words[0].english} ${words[0].spanish}")
+            //Timber.d("wordsToLearn ${wordsToLearn[0].english} ${wordsToLearn[0].spanish}")
         })
     }
 
@@ -41,6 +42,7 @@ class MainActivity : BaseActivity<MainViewModel>() {
         bottomNavigationView.setOnNavigationItemSelectedListener {item->
             when(item.itemId){
                 R.id.menu_home -> openFragment(WordsLearningFragment())
+                R.id.menu_test -> openFragment(TestFragment())
                 R.id.menu_search -> openFragment(SearchFragment())
                 R.id.menu_todo -> openFragment(MarkWordsFragment())
             }

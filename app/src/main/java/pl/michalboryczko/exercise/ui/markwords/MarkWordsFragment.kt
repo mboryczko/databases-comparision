@@ -39,8 +39,12 @@ class MarkWordsFragment : BaseFragment<MarkWordsViewModel>() {
         selectAllButton.setOnClickListener { adapter?.selectAll() }
         addToLearningListButton.setOnClickListener {
             val list = adapter?.getSelectedItems()
-            Timber.d("getSelectedItems size: ${list?.size ?: 0}")
             list?.let { viewModel.addToLearningList(it) }
+        }
+
+        deleteWordsButton.setOnClickListener {
+            val list = adapter?.getSelectedItems()
+            list?.let { viewModel.deleteWords(it) }
         }
 
         viewModel.words.observe(this, Observer {

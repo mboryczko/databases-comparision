@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.learnwords.WordsLearningFragment">
@@ -16,10 +15,8 @@
         android:background="@drawable/accent_rounded_rectangle"
         android:gravity="center_horizontal"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
+        android:layout_height="200dp"
+        android:layout_margin="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -28,7 +25,7 @@
             android:id="@+id/englishWordTextView"
             tools:text="la lagrima"
             android:textStyle="bold"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="60dp"
             android:textSize="24sp"
             android:textColor="@color/white"
             android:layout_width="wrap_content"
@@ -36,7 +33,7 @@
 
         <TextView
             android:id="@+id/spanishWordTextView"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="24dp"
             android:textStyle="italic"
             android:visibility="gone"
             tools:text="tear"
@@ -48,13 +45,33 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/nextButtton"
-        android:text="next"
-        android:background="@color/colorAccent"
-        android:layout_width="match_parent"
+
+    <EditText
+        android:id="@+id/wordEditText"
+        android:hint="@string/test_hint"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/checkButton"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:text="@string/check"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <Button
+        android:id="@+id/nextButton"
+        android:visibility="gone"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:text="@string/next"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
 
