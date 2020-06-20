@@ -14,6 +14,7 @@ open class TranslateRealm(
         var shouldBeLearned: Boolean = false
 ): RealmObject()
 
+
 fun TranslateRealm.convertToTranslate(): Translate{
     return Translate(this.id, this.english, this.spanish, this.timesAnsweredRight, this.timesAnsweredWrong, this.shouldBeLearned)
 }

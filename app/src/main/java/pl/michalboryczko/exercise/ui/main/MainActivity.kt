@@ -14,8 +14,11 @@ import pl.michalboryczko.exercise.ui.search.SearchFragment
 import pl.michalboryczko.exercise.ui.settings.SettingsFragment
 import pl.michalboryczko.exercise.ui.test.TestFragment
 
+interface MainInterface{
+    fun openSpecificFragment(fragment: Fragment)
+}
 
-class MainActivity : BaseActivity<MainViewModel>() {
+class MainActivity : BaseActivity<MainViewModel>(), MainInterface {
 
 
     companion object {
@@ -27,6 +30,7 @@ class MainActivity : BaseActivity<MainViewModel>() {
         setContentView(R.layout.activity_main)
         registerListeners()
         initialize()
+        bottomNavigationView.selectedItemId = R.id.menu_search
     }
 
     fun registerListeners(){
@@ -41,14 +45,18 @@ class MainActivity : BaseActivity<MainViewModel>() {
     fun initialize(){
         bottomNavigationView.setOnNavigationItemSelectedListener {item->
             when(item.itemId){
+                R.id.menu_search -> openFragment(SearchFragment())
                 R.id.menu_home -> openFragment(WordsLearningFragment())
                 R.id.menu_test -> openFragment(TestFragment())
-                R.id.menu_search -> openFragment(SearchFragment())
-                R.id.menu_todo -> openFragment(MarkWordsFragment())
+                R.id.menu_settings -> openFragment(SettingsFragment())
+                //R.id.menu_todo -> openFragment(MarkWordsFragment())
             }
-
             true
         }
+    }
+
+    override fun openSpecificFragment(fragment: Fragment) {
+        openFragment(fragment)
     }
 
     fun openFragment(fragment: Fragment) {

@@ -14,5 +14,6 @@ class ExecutionTimer{
         val currentTime = System.currentTimeMillis()
         val timeInMillisDifference = currentTime - startTime
         Timber.d("$log execution time: $timeInMillisDifference")
+
     }
 }

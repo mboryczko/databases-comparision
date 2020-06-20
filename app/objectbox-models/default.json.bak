@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "2:8915034514485921724",
-      "lastPropertyId": "3:5111410920654301444",
+      "lastPropertyId": "6:7758906041580712560",
       "name": "TranslateObjectBox",
       "properties": [
         {
@@ -23,6 +23,24 @@
           "id": "3:5111410920654301444",
           "name": "spanish",
           "type": 9
+        },
+        {
+          "id": "4:7604082223652028856",
+          "name": "timesAnsweredRight",
+          "type": 5,
+          "flags": 4
+        },
+        {
+          "id": "5:1233681334412719911",
+          "name": "timesAnsweredWrong",
+          "type": 5,
+          "flags": 4
+        },
+        {
+          "id": "6:7758906041580712560",
+          "name": "shouldBeLearned",
+          "type": 1,
+          "flags": 4
         }
       ],
       "relations": []

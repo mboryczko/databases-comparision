@@ -9,7 +9,7 @@ import pl.michalboryczko.exercise.model.presentation.Translate
 
 @Entity
 open class TranslateObjectBox(
-        @Id(assignable = true) var id: Long = 0,
+        @Id var id: Long = 0,
         var english: String = "",
         var spanish: String = "",
         var timesAnsweredRight: Int = 0,
@@ -28,7 +28,7 @@ fun List<Translate>.convertToTranslateObjectBoxLiteList(): List<TranslateObjectB
         translateRoomList.add(
                 TranslateObjectBox(
                         id = translate.id,
-                        english = translate.english,
+                        english = "${translate.id}${translate.english}",
                         spanish = translate.spanish,
                         timesAnsweredRight = 0,
                         timesAnsweredWrong = 0,

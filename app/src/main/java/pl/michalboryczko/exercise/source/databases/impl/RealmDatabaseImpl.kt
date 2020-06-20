@@ -16,11 +16,25 @@ import java.util.*
 
 class RealmDatabaseImpl: DatabaseOperations(){
 
-    fun updateWords(words: List<Translate>): Completable{
+    override fun deleteAll(): Completable {
+        val realm = Realm.getDefaultInstance()
+
+        timer.startTimer()
+        return Completable.create { completable ->
+            realm.executeTransaction { bgRealm->
+                bgRealm.deleteAll()
+                Timber.d("realm deleteAll()")
+                timer.stopTimer("realm deleteAll()")
+                completable.onComplete()
+            }
+        }
+    }
+
+    override fun updateWords(words: List<Translate>): Completable{
         return saveAllWords(words)
     }
 
-    fun deleteWords(words: List<Translate>): Completable{
+    override fun deleteWords(words: List<Translate>): Completable{
         val realm = Realm.getDefaultInstance()
         val idsList = words.map { it.id }.toTypedArray()
 
@@ -36,47 +50,47 @@ class RealmDatabaseImpl: DatabaseOperations(){
         }
     }
 
-    fun searchLearnedWords(text: String): Flowable<List<Translate>> {
+    override fun searchLearnedWords(text: String): Single<List<Translate>> {
         val realm = Realm.getDefaultInstance()
         timer.startTimer()
-        return realm.asFlowable()
-                .map { r ->
-                    r.where(TranslateRealm::class.java)
-                            .contains("english", text, Case.INSENSITIVE)
-                            .and()
-                            .equalTo("shouldBeLearned", true)
-                            .and()
-                            .greaterThan("timesAnsweredRight", 0.toInt())
-                            .findAll()
-                }
-                .map {
-                    timer.stopTimer("realm searchLearnedWords()")
-                    it
-                }
-                .map {realmResult-> realmResult.map { it.convertToTranslate() } }
+        val resultRealm = realm
+                .where(TranslateRealm::class.java)
+                .contains("english", text, Case.INSENSITIVE)
+                .and()
+                .equalTo("shouldBeLearned", true)
+                .and()
+                .greaterThan("timesAnsweredRight", 0.toInt())
+                .findAll()
+
+        timer.stopTimer("realm searchLearnedWords()")
+        Timber.d("realm searchLearnedWords() size: ${resultRealm.size}")
+
+        val output = mutableListOf<Translate>()
+        resultRealm.forEach { output.add(it.convertToTranslate()) }
+        return Single.defer { Single.just(output) }
     }
 
-    fun searchWordsToLearn(text: String): Flowable<List<Translate>> {
+    override fun searchWordsToLearn(text: String): Single<List<Translate>> {
         val realm = Realm.getDefaultInstance()
         timer.startTimer()
-        return realm.asFlowable()
-                .map { r ->
-                    r.where(TranslateRealm::class.java)
-                            .contains("english", text, Case.INSENSITIVE)
-                            .and()
-                            .equalTo("shouldBeLearned", true)
-                            .and()
-                            .equalTo("timesAnsweredRight", 0.toInt())
-                            .findAll()
-                }
-                .map {
-                    timer.stopTimer("realm searchWordsToLearn()")
-                    it
-                }
-                .map {realmResult-> realmResult.map { it.convertToTranslate() } }
+        val resultRealm = realm
+                .where(TranslateRealm::class.java)
+                .contains("english", text, Case.INSENSITIVE)
+                .and()
+                .equalTo("shouldBeLearned", true)
+                .and()
+                .equalTo("timesAnsweredRight", 0.toInt())
+                .findAll()
+
+        timer.stopTimer("realm searchWordsToLearn()")
+        Timber.d("realm searchWordsToLearn() size: ${resultRealm.size}")
+
+        val output = mutableListOf<Translate>()
+        resultRealm.forEach { output.add(it.convertToTranslate()) }
+        return Single.defer { Single.just(output) }
     }
 
-    override fun searchWords(text: String): Single<List<Translate>> {
+    override fun searchWordsByPhrase(text: String): Single<List<Translate>> {
         val realm = Realm.getDefaultInstance()
         timer.startTimer()
         val resultRealm = realm
@@ -86,8 +100,8 @@ class RealmDatabaseImpl: DatabaseOperations(){
                 .contains("spanish", text, Case.INSENSITIVE)
                 .findAll()
 
-        timer.stopTimer("realm searchWordsToLearn()")
-        Timber.d("realm searchWordsToLearn() size: ${resultRealm.size}")
+        timer.stopTimer("realm searchWordsByPhrase() for: $text")
+        Timber.d("realm searchWordsByPhrase() size: ${resultRealm.size}")
 
         val output = mutableListOf<Translate>()
         resultRealm.forEach { output.add(it.convertToTranslate()) }

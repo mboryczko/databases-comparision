@@ -10,7 +10,27 @@ import timber.log.Timber
 
 class CouchbaseDatabaseImpl(val database: Database): DatabaseOperations(){
 
-    override fun searchWords(text: String): Single<List<Translate>> {
+    override fun deleteAll(): Completable {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun updateWords(words: List<Translate>): Completable {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun deleteWords(words: List<Translate>): Completable {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun searchWordsToLearn(text: String): Single<List<Translate>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun searchLearnedWords(text: String): Single<List<Translate>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun searchWordsByPhrase(text: String): Single<List<Translate>> {
         //todo
         return Single.just(listOf())
     }

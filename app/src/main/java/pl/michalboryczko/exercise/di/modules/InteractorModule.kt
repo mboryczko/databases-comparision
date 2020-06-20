@@ -6,10 +6,13 @@ import com.couchbase.lite.DatabaseConfiguration
 import dagger.Module
 import dagger.Provides
 import pl.michalboryczko.exercise.app.MainApplication
+import pl.michalboryczko.exercise.model.database.greendao.DaoMaster
+import pl.michalboryczko.exercise.model.database.greendao.TranslateGreenDao
 import pl.michalboryczko.exercise.model.database.ormlite.OrmLiteDBHelper
 import pl.michalboryczko.exercise.source.api.InternetConnectivityChecker
 import pl.michalboryczko.exercise.source.repository.*
 import pl.michalboryczko.exercise.model.database.room.RoomDatabase
+import pl.michalboryczko.exercise.source.UserPreferences
 import pl.michalboryczko.exercise.source.api.rest.Api
 import pl.michalboryczko.exercise.source.databases.impl.*
 import javax.inject.Singleton
@@ -46,6 +49,23 @@ class InteractorModule {
 
     @Provides
     @Singleton
+    fun provideGreenDao(app: MainApplication): TranslateGreenDao {
+        val helper = DaoMaster.DevOpenHelper(app, "translate-db")
+        val db = helper.writableDatabase
+        val session = DaoMaster(db).newSession()
+        return session.translateGreenDao
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideGreenDaoDatabaseImpl(dao: TranslateGreenDao): GreenDaoDatabaseImpl {
+        return GreenDaoDatabaseImpl(dao)
+    }
+
+
+    @Provides
+    @Singleton
     fun provideRoomDatabaseImpl(database: RoomDatabase): RoomDatabaseImpl = RoomDatabaseImpl(database)
 
 
@@ -66,17 +86,21 @@ class InteractorModule {
     }
 
 
+    @Singleton
     @Provides
     fun provideUserRepository(
+            mainApplication: MainApplication,
             api: Api,
             room: RoomDatabaseImpl,
             realm: RealmDatabaseImpl,
             couchbase: CouchbaseDatabaseImpl,
             ormLiteDatabaseImpl: OrmLiteDatabaseImpl,
             objectBoxDatabaseImpl: ObjectBoxDatabaseImpl,
-            checker: InternetConnectivityChecker
+            greenDaoDatabaseImpl: GreenDaoDatabaseImpl,
+            checker: InternetConnectivityChecker,
+            preferences: UserPreferences
     ): UserRepository {
-        return UserRepositoryImpl(api, room, realm, couchbase, ormLiteDatabaseImpl, objectBoxDatabaseImpl,  checker)
+        return UserRepositoryImpl(api, room, realm, couchbase, ormLiteDatabaseImpl, objectBoxDatabaseImpl, greenDaoDatabaseImpl, checker, preferences)
     }
 
 }

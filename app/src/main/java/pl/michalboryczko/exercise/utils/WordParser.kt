@@ -8,16 +8,20 @@ import java.io.File
 class WordParser{
 
     companion object {
-        fun parseWords(fileName: String): List<Translate>{
+        fun parseWords(fileName: String, words: Int): List<Translate>{
             val translates = mutableListOf<Translate>()
-            //Timber.d("wordsToLearn parse processing")
+            Timber.d("wordsToLearn parse processing")
             val downlaodDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+            var i = 0
             File(downlaodDirectory, fileName).forEachLine { line->
-                val words = line.split(" ")
-                translates.add(Translate(translates.size.toLong(), words[4], words[2],  0, 0, false))
+                i += 1
+                if(i < words){
+                    val words = line.split(" ")
+                    translates.add(Translate(translates.size.toLong(), words[4]+translates.size, words[2]+translates.size,  0, 0, false))
+                }
             }
 
-            Timber.d("wordsToLearn parse processing END")
+            Timber.d("wordsToLearn parsed ${translates.size} processing END")
             return translates
         }
 

@@ -13,8 +13,6 @@ import timber.log.Timber
 import io.realm.RealmConfiguration
 
 
-
-
 class MainApplication: DaggerApplication() {
 
 
@@ -32,7 +30,7 @@ class MainApplication: DaggerApplication() {
         Realm.setDefaultConfiguration(config)
 
         CouchbaseLite.init(this)
-        ObjectBox.init(this);
+        ObjectBox.init(this)
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {

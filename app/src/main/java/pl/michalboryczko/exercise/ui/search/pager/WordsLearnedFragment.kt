@@ -26,8 +26,8 @@ class WordsLearnedFragment : BaseFragment<SearchViewModel>() {
     override fun onResume() {
         super.onResume()
 
-        viewModel.wordsLearned.observe(this, Observer {
-            showWords(it)
+        viewModel.wordsLearned.observe(this, Observer {event->
+            event.getContentIfNotHandled()?.let { showWords(it) }
         })
     }
 

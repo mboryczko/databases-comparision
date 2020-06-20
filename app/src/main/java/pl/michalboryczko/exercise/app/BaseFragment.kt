@@ -1,5 +1,6 @@
 package pl.michalboryczko.exercise.app
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerAppCompatActivity
 import dagger.android.support.DaggerFragment
+import pl.michalboryczko.exercise.ui.main.MainInterface
 import javax.inject.Inject
 
 abstract class BaseFragment<T: BaseViewModel>  : DaggerFragment() {
@@ -18,9 +20,18 @@ abstract class BaseFragment<T: BaseViewModel>  : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
     lateinit var viewModel : T
+    var mainInterface: MainInterface? = null
+
 
     inline fun <reified T: BaseViewModel> getGenericViewModel(): T {
         return ViewModelProviders.of(this, viewModelFactory).get(T::class.java)
+    }
+
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if(context is MainInterface)
+            mainInterface = context
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

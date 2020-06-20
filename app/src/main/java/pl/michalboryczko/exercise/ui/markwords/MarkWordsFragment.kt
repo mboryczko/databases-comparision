@@ -14,9 +14,10 @@ import kotlinx.android.synthetic.main.fragment_mark_words.*
 import pl.michalboryczko.exercise.R
 import pl.michalboryczko.exercise.app.BaseFragment
 import pl.michalboryczko.exercise.model.presentation.MarkTranslate
+import pl.michalboryczko.exercise.ui.search.SearchViewModel
 import timber.log.Timber
 
-class MarkWordsFragment : BaseFragment<MarkWordsViewModel>() {
+class MarkWordsFragment : BaseFragment<SearchViewModel>() {
 
     private var adapter: MarkWordsAdapter? = null
 
@@ -27,14 +28,6 @@ class MarkWordsFragment : BaseFragment<MarkWordsViewModel>() {
 
     override fun onResume() {
         super.onResume()
-        searchEditText.addTextChangedListener(object: TextWatcher{
-            override fun afterTextChanged(s: Editable?) {}
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.onTextChanged(searchEditText.text.toString())
-            }
-        })
 
         selectAllButton.setOnClickListener { adapter?.selectAll() }
         addToLearningListButton.setOnClickListener {
@@ -47,8 +40,8 @@ class MarkWordsFragment : BaseFragment<MarkWordsViewModel>() {
             list?.let { viewModel.deleteWords(it) }
         }
 
-        viewModel.words.observe(this, Observer {
-            showWords(it)
+        viewModel.allWords.observe(this, Observer {event->
+            event.getContentIfNotHandled()?.let { showWords(it) }
         })
     }
 

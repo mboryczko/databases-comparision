@@ -40,6 +40,7 @@ class WordsLearningViewModel
     val currentTranslation: MutableLiveData<Translate> = MutableLiveData()
     val correctAnswear: MutableLiveData<Boolean> = MutableLiveData()
     val wrongAnswear: MutableLiveData<Boolean> = MutableLiveData()
+    val showNoLearningWordsDialog: MutableLiveData<Event<Boolean>> = MutableLiveData()
 
     init {
 
@@ -65,12 +66,22 @@ class WordsLearningViewModel
                 .observeOn(mainScheduler)
                 .subscribe(
                         {
-                            currentTranslation.value = it.random()
-                            it.forEach {
-                                Timber.d("getNextWord word: ${it}")
+                            if(it.isNotEmpty()){
+                                currentTranslation.value = it.random()
+                                it.forEach {
+                                    Timber.d("getNextWord word: ${it}")
+                                }
                             }
+
+                            Timber.d("getNextWord collection empty")
+
                         },
                         {
+                            if(it is NoSuchElementException){
+                                showNoLearningWordsDialog.value = Event(true)
+                            }else{
+
+                            }
                             Timber.d("getNextWord error mes: ${it.message}")
                             Timber.d("getNextWord error loc: ${it.localizedMessage}")
                         }
